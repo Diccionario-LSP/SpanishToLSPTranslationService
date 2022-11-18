@@ -14,7 +14,7 @@ Our architecture has the following modules:
 The diagram of our architecture is showed bellow:
 
 <p align="center">
-  <img src="./assets/AWS_Diagram.png" alt="Architecture" width="738">
+  <img src="./assets/AWS_Diagram.jpg" alt="Architecture" width="738">
 </p>
 
 As is written before, we are currently evaluating if the inference of video streams will use Lambda, EC2 or even SageMaker.
