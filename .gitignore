@@ -1,5 +1,5 @@
 # ignored folders and files
-./configuration/config.json
+configuration/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
