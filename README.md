@@ -8,7 +8,7 @@ Our architecture has the following modules:
 
 * **Website**: It comprehends the website and services related that permits to show our app in a browser (front-end). Here is a [Demo] [Services used: Route 53, S3, CloudFormation]
 * **Deployment**: Consists in the services that permits the deployment of the ML model that will allow the inference of our system. [Services used: EC2, Elastic Container Registry(ECR)]
-* **Inference PSL/Spanish**: Probably the most import module of our architecture which realizes inferences of video streaming from the website and return as a result the sign or a top 5 of similar signs of PSL. [Services used: Kinesis Video Streams(KVS), Lambda/EC2, API Gateway]
+* **Inference PSL/Spanish**: Probably the most import module of our architecture which realizes inferences of video streaming from the website and return as a result the sign or a top 5 of similar signs of PSL. [Services used: Kinesis Video Streams(KVS),Sagemaker,  API Gateway] 
 * **Search Spanish/PSL**: It computes a search of signs from a text input of the website. [Services used: API Gateway, Lambda, RDS/DynamoDB, S3]
 
 The diagram of our architecture is showed bellow:

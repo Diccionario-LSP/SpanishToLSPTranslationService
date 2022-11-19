@@ -17,3 +17,8 @@ We prepared a dockerfile to use the model "Smile-lab" because this one generates
 # Sagemaker without ECR
 
 We prepare in a jupyter notebook from the Sagemaker service using the "Spoter" model. this model has a simpler implementation so we do not have dependencies issues. But we do not know if we can preprocess what we receive from Kenesis Video Stream.
+
+---------------------
+# Note
+
+Remember to modify the configuration json file located in "configuration" folder (in root folder) 
