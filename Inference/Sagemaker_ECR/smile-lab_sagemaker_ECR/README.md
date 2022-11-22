@@ -1,4 +1,4 @@
-NOTE: Remember to errase your AWS credential when you add it in "invoke.py" and "container/deploy.py", and also some Role, S3 and ECR information.
+NOTE: Remeber to modify (and not upload to git) the config.json file located in configuration folder in the main root in order to use in deploy.py your aws credential.
 
 # Steps to prepare the inference
 
@@ -20,8 +20,15 @@ NOTE: Remember to errase your AWS credential when you add it in "invoke.py" and 
 * torchserve-entrypoint.py: [and torchserve-ec2-entrypoint.py] this both files are used by otrchserve to manage sagemaker function. We do not know which one we have to use.
 * container folder: It is used to copy all the "smile-lab" scripts and model at once to the docker image.
 
-## under container foldel
+## under container folder
 * deploy.py: used to initialize the sagemaker endpoint
 * local_test.py: It is used to try locally the inference. At the same time, this file have another version of "input_fn, model_fn, predict_fn, output_fn" but here it is called as "preprocess, Inference, postprocess". We saved it in case this one is the one we have to use in the inference (in this case, it have to be placed in code folder).
 * model.pt: the pre-trained PSL recognition model. If it is not here, you have to train a new one or ask us to share you one.
 * code folder: It have all the scripts to make the inference work
+
+## under container/code folder
+* download_kp_model.sh: file used to download the keypoint estimation model
+* inference.py: file that have the structure "input_fn, model_fn, predict_fn, output_fn" to create the inference. It also include the preprocessing part that "smile-lab" model use to prepare the data
+* meaning.pkl: dictionary that have the meaning of "smile-lab" model output label.
+* model_handler.py: part of torchserve files that helps in the manage of the model
+* other files and folder: There are part of "smile-lab" model script tha allow this model works. 
