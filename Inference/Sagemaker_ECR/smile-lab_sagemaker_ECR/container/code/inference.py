@@ -302,39 +302,44 @@ def model_fn(model_dir):
         parser.set_defaults(**default_arg)
     arg = parser.parse_args()
 
-    arg.weights = '../model.pt'#model_dir
+    arg.weights = model_dir
 
-    #model = load_model(arg)
+    model = load_model(arg)
 
-    return "model" #model
+    return model
 
 
 def input_fn(request_body, request_content_type):
-    #data = preproccess()
+    data = preproccess()
 
-    #data = torch.Tensor(data)
-    #data = Variable(data.float().cpu(), requires_grad=False)
+    data = torch.Tensor(data)
+    data = Variable(data.float().cpu(), requires_grad=False)
 
-    return "input"#data.transpose(3,1).transpose(2,3)
+    return data.transpose(3,1).transpose(2,3)
 
 
 def predict_fn(input_data, model):
 
-    #with torch.no_grad():
-    #    output = model(input_data)
+    with torch.no_grad():
+        output = model(input_data)
 
-    return "Hello world" #output
+    return output
 
 
 def output_fn(prediction, content_type):
     
-    #_, predict_label = torch.topk(prediction.data, 5)
+    _, predict_label = torch.topk(prediction.data, 5)
             
-    #result = predict_label[0].numpy() 
+    result = predict_label[0].numpy() 
 
-    #meaning = pd.read_pickle("meaning.pkl")
-    #meaning = dict(meaning)
+    meaning = pd.read_pickle("meaning.pkl")
+    meaning = dict(meaning)
 
-    #result = [meaning[val] for val in result]
+    result = [meaning[val] for val in result]
 
-    return prediction#result
+    return result
+
+#data = input_fn("","")
+#model = model_fn('../model.pt')
+#pred = predict_fn(data, model)
+#print(output_fn(pred, ""))
