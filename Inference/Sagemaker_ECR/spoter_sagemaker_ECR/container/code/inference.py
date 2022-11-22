@@ -223,11 +223,8 @@ def load_model(path):
         with open(path, 'r') as f:
             weights = pickle.load(f)
     else:
-        weights = torch.load(path)
+        weights = torch.load(path, map_location=torch.device('cpu'))
 
-    weights = OrderedDict(
-            [[k.split('module.')[-1],
-                v.cpu()] for k, v in weights.items()])
 
     try:
         model.load_state_dict(weights)
