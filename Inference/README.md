@@ -10,7 +10,8 @@ we worked with two models "m-decoster" and "Smile-lab" model. we do not use this
 
 # Sagemaker with ECR
 
-We prepared a dockerfile to use the model "Smile-lab" because this one generates notable better results than "m-decoster". We think that the problem could be in these two places:
+We prepared a dockerfile to use the model "Smile-lab" and "Spoter" (in process) because this one generates notable better results than "m-decoster". We think that the problem could be in these two places:
+
  * Not correctly locating the torchserve files and our code in the docker image  
  * Our invocation file is not well implemented and this causes us to get some error messages.
 
