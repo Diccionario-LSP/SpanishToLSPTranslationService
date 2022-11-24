@@ -3,7 +3,7 @@ from sagemaker import get_execution_role
 import os
 import json
 
-config_file = '../../../configuration/config.json'
+config_file = '../../../../configuration/config.json'
 
 with open(config_file, 'r') as json_file:
     config = json.load(json_file)

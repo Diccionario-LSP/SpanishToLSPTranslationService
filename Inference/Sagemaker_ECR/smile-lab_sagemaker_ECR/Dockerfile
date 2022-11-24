@@ -55,6 +55,7 @@ RUN curl -L -o ~/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-py3
  && rm ~/miniconda.sh \
  && /opt/conda/bin/conda install -c conda-forge \
     python=$PYTHON_VERSION \
+ && conda update -n base -c defaults conda \
  && /opt/conda/bin/conda install -y \
     # conda 4.10.0 requires ruamel_yaml to be installed. Currently pinned at latest.
     ruamel_yaml==0.15.100 \
