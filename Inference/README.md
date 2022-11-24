@@ -23,3 +23,10 @@ We prepare in a jupyter notebook from the Sagemaker service using the "Spoter" m
 # Note
 
 Remember to modify the configuration json file located in "configuration" folder (in root folder) 
+
+---------------------
+# General overview of the model we use
+
+<p align="center">
+  <img src="./model-process.jpg" alt="inference" width="738">
+</p>
