@@ -17,12 +17,21 @@ role = config["credential"]['role']
 # You can also configure a sagemaker role and reference it by its name.
 # role = "CustomSageMakerRoleName"
 
+
+'''
+If you don't have model.tar.gz file, please read the readme located in this folder
+'''
 pytorch_model = PyTorchModel(
-    model_data='', 
+    model_data='model.tar.gz', 
     role=role, 
     entry_point='./inference.py', 
     image_uri='',
     framework_version='1.3.1')
+
+'''
+If all was ok, you will see a charging bar that means the inference is being created. 
+You can check it in Sagemaker endpoint dashboard 
+'''
 
 predictor = pytorch_model.deploy(
     instance_type='ml.t2.medium',
