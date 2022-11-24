@@ -5,6 +5,7 @@ import json
 
 config_file = '../../../../configuration/config.json'
 
+print("retrieving aws credentials...")
 with open(config_file, 'r') as json_file:
     config = json.load(json_file)
     
@@ -17,7 +18,7 @@ role = config["credential"]['role']
 # You can also configure a sagemaker role and reference it by its name.
 # role = "CustomSageMakerRoleName"
 
-
+print("preparing pytorch model...")
 '''
 If you don't have model.tar.gz file, please read the readme located in this folder
 '''
@@ -32,7 +33,7 @@ pytorch_model = PyTorchModel(
 If all was ok, you will see a charging bar that means the inference is being created. 
 You can check it in Sagemaker endpoint dashboard 
 '''
-
+print("deploying the model in sagemaker endpoint...")
 predictor = pytorch_model.deploy(
     instance_type='ml.t2.medium',
     endpoint_name='Sagemaker-Endpoint-model',
