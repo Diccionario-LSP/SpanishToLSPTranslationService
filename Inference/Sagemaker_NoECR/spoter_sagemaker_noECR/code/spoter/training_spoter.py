@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
-import wandb
 
 from spoter.spoter_model import SPOTER
 from spoter.utils import train_epoch, evaluate, my_evaluate, evaluate_top_k, get_metrics_epoch_zero
@@ -43,9 +42,6 @@ class TrainingSpoter():
         name_file = 'spoter-sl.pth' if keypoints_model=="" else f'spoter-sl-{keypoints_model}.pth'
         torch.save(model.state_dict(), os.path.join(path_sub, name_file))
 
-        if use_wandb:
-            wandb.save(os.path.join(path_sub, '*.pth'),
-                    base_path='/'.join(path_sub.split('/')[:-2]))
 
 
     def save_dict_labels_dataset(
@@ -65,10 +61,6 @@ class TrainingSpoter():
             json.dump(dict_labels_dataset, f)
         with open(path_inv_encoder, 'w') as f:
             json.dump(inv_dict_labels_dataset, f)
-
-        if self.use_wandb:
-            wandb.save(path_encoder)
-            wandb.save(path_inv_encoder)
 
 
     def train_epoch_metrics(
@@ -230,9 +222,6 @@ class TrainingSpoter():
                                                 keypoints_model=keypoints_model)
             metrics_log_epoch_zero.update(metrics_log)
 
-        if self.use_wandb:
-            wandb.log(metrics_log_epoch_zero)
-
         for epoch in tqdm(range(self.config.epochs)):
             
             metrics_log_epoch = {"train_epoch": epoch+1}
@@ -253,12 +242,7 @@ class TrainingSpoter():
                 dict_max_eval_acc_top5[keypoints_model] = max_eval_acc_top5_new
 
                 metrics_log_epoch.update(metrics_log)
-            
-            if self.use_wandb:
-                wandb.log(metrics_log_epoch)
 
-        if self.use_wandb:
-            wandb.finish()
 
 
     def train(
@@ -335,9 +319,3 @@ class TrainingSpoter():
             max_eval_acc_top5 = max_eval_acc_top5_new
             
             metrics_log["train_epoch"] = epoch + 1
-
-            if self.use_wandb:
-                wandb.log(metrics_log)
-        
-        if self.use_wandb:
-            wandb.finish()

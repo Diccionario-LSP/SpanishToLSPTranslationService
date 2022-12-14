@@ -4,7 +4,7 @@ import torch
 
 import torch.nn as nn
 from typing import Optional
-
+import logging
 
 def _get_clones(mod, n):
     return nn.ModuleList([copy.deepcopy(mod) for _ in range(n)])
@@ -46,14 +46,14 @@ class SPOTER(nn.Module):
 
     def __init__(self, num_classes, hidden_dim=55, nhead=2, num_encoder_layers=2, num_decoder_layers=2, dim_feedforward=256):
         super().__init__()
-        print('hidden_dim',hidden_dim)
-        print('num_decoder_layers',num_decoder_layers,'<--------------------')
+        #print('hidden_dim',hidden_dim)
+        #print('num_decoder_layers',num_decoder_layers,'<--------------------')
         self.row_embed = nn.Parameter(torch.rand(50, hidden_dim))
         self.pos = nn.Parameter(torch.cat([self.row_embed[0].unsqueeze(0).repeat(1, 1, 1)], dim=-1).flatten(0, 1).unsqueeze(0))
         self.class_query = nn.Parameter(torch.rand(1, hidden_dim))
         self.transformer = nn.Transformer(hidden_dim, nhead=nhead, num_encoder_layers=num_encoder_layers, num_decoder_layers=num_decoder_layers)
         self.linear_class = nn.Linear(hidden_dim, num_classes)
-
+        
         # Deactivate the initial attention decoder mechanism
         custom_decoder_layer = SPOTERTransformerDecoderLayer(self.transformer.d_model, self.transformer.nhead, dim_feedforward,
                                                              0.5, "relu")
@@ -77,5 +77,3 @@ class SPOTER(nn.Module):
         return res
 
 
-if __name__ == "__main__":
-    pass
