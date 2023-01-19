@@ -1,33 +1,33 @@
 
-            AWS.config.region = 'us-east-1'; // 1. Enter your region
 
-        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: 'us-east-1:b5013574-2741-4e18-97be-9395b5929162' // 2. Enter your identity pool
-        });
+	AWS.config.region = 'us-east-1'; // 1. Enter your region
 
-        AWS.config.credentials.get(function(err) {
-            if (err) alert(err);
-            console.log("estoy aqui")
-            console.log(AWS.config.credentials);
-        });
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+	IdentityPoolId: 'us-east-1:b5013574-2741-4e18-97be-9395b5929162' // 2. Enter your identity pool
+});
 
-        var bucketName = 'user-video-test'; // Enter your bucket name+
-        
+AWS.config.credentials.get(function(err) {
+	if (err) alert(err);
+	console.log("estoy aqui")
+	console.log(AWS.config.credentials);
+});
 
-        var S3 = new AWS.S3();
+var bucketName = 'user-video-test'; // Enter your bucket name+
 
-        var bucket = new AWS.S3({
-            params: {
-                Bucket: bucketName
-            }
-        });
 
-        var fileChooser = document.getElementById('file-chooser');
-        var button = document.getElementById('upload-button');
-        var results = document.getElementById('results');
-        var percentage = document.getElementById('percentage');
-        var cancelUpload = document.getElementById('cancel-button');
+var S3 = new AWS.S3();
 
+var bucket = new AWS.S3({
+	params: {
+		Bucket: bucketName
+	}
+});
+
+var fileChooser = document.getElementById('file-chooser');
+var button = document.getElementById('upload-button');
+var results = document.getElementById('results');
+var percentage = document.getElementById('percentage');
+var cancelUpload = document.getElementById('cancel-button');
 
 
 
@@ -42,12 +42,12 @@ function dataURLtoFile(dataurl, filename) {
 // Store a reference of the preview video element and a global reference to the recorder instance
 var video = document.getElementById('my-preview');
 var recorder;
-
+video.style.visibility =  "hidden";
 // When the user clicks on start video recording
 document.getElementById('btn-start-recording').addEventListener("click", function(){
     // Disable start recording button
     this.disabled = true;
-
+	video.style.visibility =  "visible"; 
     // Request access to the media devices
     navigator.mediaDevices.getUserMedia({
         audio: false, 
@@ -89,7 +89,7 @@ document.getElementById('btn-start-recording').addEventListener("click", functio
 // When the user clicks on Stop video recording
 document.getElementById('btn-stop-recording').addEventListener("click", function(){
     this.disabled = true;
-
+	video.style.display =  "none"; 
     recorder.stopRecording().then(function() {
         console.info('stopRecording success');
 
@@ -138,8 +138,38 @@ document.getElementById('btn-stop-recording').addEventListener("click", function
                       const li = document.createElement("li");
                       li.textContent = item.gloss;
                       ul.appendChild(li);
+					const queryString = li.textContent;
+					
+					const makeUrl = filename => `https://isolatedsigns.s3.amazonaws.com/${encodeURI(filename)}`;
+					const getUrlFromNode = node => node.url.split("/")[3];
+					const buildUrl = node => makeUrl(getUrlFromNode(node));
+					const buildVideosSearchUrl = query => `https://cklvhhyl66.execute-api.us-east-1.amazonaws.com/?word=${query}`
+					const getVideosFromServer = query => fetch(buildVideosSearchUrl(query)).then(response => response.json())
+					const makeUrlSentences = filename => `https://sentencesigns.s3.amazonaws.com/${encodeURI(filename)}`;
+					const getUrlFromNodeSentences = node => node.urlSentence.split("/")[3];
+					const buildUrlSentence = node => makeUrlSentences(getUrlFromNodeSentences(node));
+					const mapValues = nodes => nodes.map(node => ({label: node.sign_gloss, imageUrl: buildUrl(node)}));
+					const mapValuesSentences = nodes => nodes.map(node => ({label: node.text, imageUrl: buildUrlSentence(node)}));
+					const getListElement = () => document.getElementById("products-list");
+					const getListSentence = () => document.getElementById("sentences-list");
+					const buildVideoNode = ({ label, imageUrl}) =>
+					`
+						<div class="product-item" category="adjectives">
+							<video height="205px" width="205px" controls>
+								<source src="${imageUrl}" type="video/mp4">
+							</video>
+							<a href="#">${label}</a>
+						</div>
+					`
+
+					const appendVideo = node => {
+						getListElement().insertAdjacentHTML('beforeend', buildVideoNode(node))
+					}
+					getListElement().innerHTML = "";
+					getVideosFromServer(queryString).then(mapValues).then(nodes => nodes.map(appendVideo));
+
                     });
-                    document.getElementById("results").appendChild(ul);
+                    //document.getElementById("products-list").appendChild(ul);
                     
                 }
             });
