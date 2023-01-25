@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="lib/bootstrap-reboot.css" />
     <link rel="stylesheet" href="lib/lsp.css" />
     <link rel="stylesheet" href="lib/item.css" />
+    <link rel="stylesheet" href="lib/busqueda.css" />
     <link rel="stylesheet" href="lib/categorias.css" />
     <script src="https://kit.fontawesome.com/b2cdd38900.js"></script>
     <script type="text/javascript" src="lib/lsp.js"></script>
@@ -60,48 +61,50 @@
 
 
     <main>
+        <div id="left-side"></div>
+            <div class="lsp-video">
 
-        <div class="lsp-video">
+                <div class="btn-video">
+                    <!-- 1. Include action buttons play/stop -->
+                    <button id="btn-start-recording">
+                        Comenzar grabación
+                    </button>
+                    
+                    <button disabled="disabled" id="btn-stop-recording">
+                        Detener y enviar video
+                    </button>
+                    
+                    <button id="cancel-button">
+                        Cancelar grabación
+                    </button>
 
-            <div class="btn-video">
-                <!-- 1. Include action buttons play/stop -->
-                <button id="btn-start-recording">
-                    Comenzar grabación
-                </button>
-                
-                <button disabled="disabled" id="btn-stop-recording">
-                    Detener y enviar video
-                </button>
-                
-                <button id="cancel-button">
-                    Cancelar grabación
-                </button>
+                </div>
+
+
+            <!--
+            2. Include a video element that will display the current video stream
+            and as well to show the recorded video at the end.
+            -->
+            <hr>
+            <video autoplay="" controls="" id="my-preview">
+            </video>
+            <!--
+            <p id="percentage">
+            </p>
+            <div id="results">
+            </div>
+            -->
+            </hr>
 
             </div>
-
-
-        <!--
-        2. Include a video element that will display the current video stream
-        and as well to show the recorded video at the end.
-        -->
-        <hr>
-        <video autoplay="" controls="" id="my-preview">
-        </video>
-        <!--
-        <p id="percentage">
-        </p>
-        <div id="results">
         </div>
-        -->
-        </hr>
-
-        </div>
-
-        <div class="container">
-            <section class="products-list" id="products-list">
-			</section>
-			<section class="products-list" id="sentences-list">
-        </section>
+        <div id="left-side"></div>
+            <div class="container">
+                <section class="products-list" id="products-list">
+                </section>
+                <section class="products-list" id="sentences-list">
+            </section>
+            </div>
         </div>
 </main>
 
