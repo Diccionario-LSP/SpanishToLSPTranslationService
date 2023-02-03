@@ -48,7 +48,6 @@ h3 {
     color: white;
     font-weight: 700;
     text-align: center;
-    padding-right: 30%;
 }
 h2.center {
     text-align: center;
@@ -146,7 +145,8 @@ ul {
 }
 
 header {
-    position: fixed;
+    position: sticky;
+    top: 0; /* Don't forget this, required for the stickiness */
     width: 100%;
     top: 0;
     z-index: 10;

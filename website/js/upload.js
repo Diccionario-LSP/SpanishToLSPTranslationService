@@ -41,18 +41,165 @@ function dataURLtoFile(dataurl, filename) {
 }
 // Store a reference of the preview video element and a global reference to the recorder instance
 var video = document.getElementById('my-preview');
+var countdown = document.getElementById("countdown");
+var recordIcon = document.getElementById("record-icon");
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
 var recorder;
 video.style.visibility =  "hidden";
+countdown.style.visibility = "hidden";
+
+var modelParams = {
+    flipHorizontal: true,
+    maxNumBoxes: 3,
+    iouThreshold: 0.2,
+    scoreThreshold: 0.6,
+    bboxLineWidth: "0",
+    fontSize: 0,
+};
+
+var isVideo = false;
+var model = null;
+var toggleButton =  document.getElementById('btn-start-recording')
+
+toggleButton.addEventListener("click", function (){
+    toggleVideo();
+});
+
+function toggleVideo(){
+    if(!isVideo){
+        startVideo()
+    }
+    else{
+        handtrack.stopVideo(video);
+        isVideo = false;
+    }
+}
+
+function startVideo(){
+    handTrack.startVideo(video).then(function(status)
+    {
+        if (status) {
+            isVideo = true
+            document.getElementById('instructions').remove();
+
+            rundetection();
+         
+        }
+    }
+)};
+
+function rundetection(){
+    model.detect(video).then(predictions => {
+        document.getElementById('face').style.visibility = "visible"
+        document.getElementById('hand1').style.visibility = "visible"
+        document.getElementById('hand2').style.visibility = "visible"
+    model.renderPredictions(predictions, canvas, context, video);
+    let fc = document.getElementById('face')
+    let h1c = document.getElementById('hand1')
+    let h2c = document.getElementById('hand2')
+
+    if (predictions.length !== 0){
+        let face_x = predictions[0].bbox[0];
+        let face_y = predictions[0].bbox[1];
+
+        if (face_x > 185 && face_x < 330 && face_y < 70){
+            fc.style.borderColor = "green";
+        }
+        else{
+            fc.style.borderColor = "red";
+        }
+
+        if (predictions.length > 1){
+            let hand1_x = predictions[1].bbox[0];
+            let hand1_y = predictions[1].bbox[1];
+
+            if (hand1_x < 90 && hand1_y > 180){
+                h1c.style.borderColor = "green";
+            }
+            else{
+                h1c.style.borderColor = "red";
+            }
+
+        }
+
+        if (predictions.length > 2){
+            let hand2_x = predictions[2].bbox[0];
+            let hand2_y = predictions[2].bbox[1];
+
+            console.log(hand2_y)
+           
+            if (hand2_x > 215 && hand2_y > 200 && hand2_y < 400){
+                h2c.style.borderColor = "green";
+            }
+            else{
+                h2c.style.borderColor = "red";
+            }
+
+        }
+    }
+
+    if (fc.style.borderColor == 'green' && h1c.style.borderColor == 'green' && h2c.style.borderColor == 'green'){          
+            isVideo = false
+            video.style.visibility =  "visible"; 
+            canvas.style.visibility = "hidden";
+            document.getElementById('face').style.visibility = "hidden"
+            document.getElementById('hand1').style.visibility = "hidden"
+            document.getElementById('hand2').style.visibility = "hidden"
+            countdown.style.visibility = "visible";
+            let timeLeft = 3;
+            var videoTimer = setInterval(function(){
+                if(timeLeft < 1){
+
+                    clearInterval(videoTimer);
+                    countdown.style.visibility = "hidden";
+
+                    startRecording();
+
+                }else{
+                    countdown.innerHTML = timeLeft;
+                }
+                timeLeft-=1;
+
+            }, 1000)
+            
+
+    }
+
+    if (isVideo){
+        requestAnimationFrame(rundetection);
+    }
+})}
+
+handTrack.load(modelParams).then(lmodel =>{
+    model = lmodel;
+})
+
+
 // When the user clicks on start video recording
-document.getElementById('btn-start-recording').addEventListener("click", function(){
-    // Disable start recording button
-    this.disabled = true;
-	video.style.visibility =  "visible"; 
+function startRecording(){
+
+
     // Request access to the media devices
     navigator.mediaDevices.getUserMedia({
         audio: false, 
         video: true
     }).then(function(stream) {
+
+        handTrack.stopVideo(video);
+        let timeLeft = 3;
+        var videoTimer = setInterval(function(){
+            recordIcon.style.visibility = "visible";
+            if(timeLeft <= 0){
+                clearInterval(videoTimer);
+                recordIcon.style.visibility = "hidden";
+                sendRecording();
+            }else{
+                countdown.innerHTML = timeLeft;
+            }
+            timeLeft-=1;
+        },1000);
+    
         // Display a live preview on the video element of the page
         setSrcObject(stream, video);
 
@@ -84,10 +231,17 @@ document.getElementById('btn-start-recording').addEventListener("click", functio
                console.log(error);
         console.error("Cannot access media devices: ", error);
     });
-}, false);
+};
 
 // When the user clicks on Stop video recording
-document.getElementById('btn-stop-recording').addEventListener("click", function(){
+function sendRecording(){
+    document.getElementById('video').remove();
+    loader =  document.getElementById('loader')
+    loader.style.visibility = "visible"
+    loader.style.marginTop = "10%"
+    loader.style.marginBottom = "30%"
+    loaderText = document.getElementById('loader-text')
+    loaderText.innerText = "Procesando..."
     this.disabled = true;
 	video.style.display =  "none"; 
     recorder.stopRecording().then(function() {
@@ -122,6 +276,7 @@ document.getElementById('btn-stop-recording').addEventListener("click", function
                 })
             };
             console.log("antes de invoke")
+            loaderText.innerText = "Obteniendo resultados..."
             lambda.invoke(params, function(err, data) {
                 if (err) {
                     console.log(err, err.stack);
@@ -170,9 +325,18 @@ document.getElementById('btn-stop-recording').addEventListener("click", function
 
                     });
                     //document.getElementById("products-list").appendChild(ul);
-                    
+
+
+                        loader.style.visibility = "hidden"
+                        loader.style.marginTop = "0%"
+                        loader.style.marginBottom = "0%"
+
+        
                 }
             });
+
+
+
 
         });
         
@@ -185,7 +349,7 @@ document.getElementById('btn-stop-recording').addEventListener("click", function
             });
 
 
-       
+
 // here you can use the result of promiseB
 });
        
@@ -208,6 +372,4 @@ document.getElementById('btn-stop-recording').addEventListener("click", function
     }).catch(function(error) {
         console.error('stopRecording failure', error);
     });
-}, false);
-
-
+};
