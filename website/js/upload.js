@@ -283,47 +283,51 @@ function sendRecording(){
 
                 // If OK
                 } else {
-
+                    
                     const glossListStr = data.Payload;
                     const glossList = JSON.parse(glossListStr)
                     console.log(glossList)
+                    var getListElement = document.getElementById("results");
                     var ul = document.createElement("ul");
                     glossList.forEach(item => {
-                      console.log(item.gloss)
-                      const li = document.createElement("li");
-                      li.textContent = item.gloss;
-                      ul.appendChild(li);
-					const queryString = li.textContent;
-					
-					const makeUrl = filename => `https://isolatedsigns.s3.amazonaws.com/${encodeURI(filename)}`;
-					const getUrlFromNode = node => node.url.split("/")[3];
-					const buildUrl = node => makeUrl(getUrlFromNode(node));
-					const buildVideosSearchUrl = query => `https://cklvhhyl66.execute-api.us-east-1.amazonaws.com/?word=${query}`
-					const getVideosFromServer = query => fetch(buildVideosSearchUrl(query)).then(response => response.json())
-					const makeUrlSentences = filename => `https://sentencesigns.s3.amazonaws.com/${encodeURI(filename)}`;
-					const getUrlFromNodeSentences = node => node.urlSentence.split("/")[3];
-					const buildUrlSentence = node => makeUrlSentences(getUrlFromNodeSentences(node));
-					const mapValues = nodes => nodes.map(node => ({label: node.sign_gloss, imageUrl: buildUrl(node)}));
-					const mapValuesSentences = nodes => nodes.map(node => ({label: node.text, imageUrl: buildUrlSentence(node)}));
-					const getListElement = () => document.getElementById("products-list");
-					const getListSentence = () => document.getElementById("sentences-list");
-					const buildVideoNode = ({ label, imageUrl}) =>
-					`
-						<div class="product-item" category="adjectives">
-							<video height="205px" width="205px" controls>
-								<source src="${imageUrl}" type="video/mp4">
-							</video>
-							<a href="#">${label}</a>
-						</div>
-					`
+                        console.log(item.gloss)
+                        const li = document.createElement("li");
+                        li.textContent = item.gloss;
+                        ul.appendChild(li);
 
-					const appendVideo = node => {
-						getListElement().insertAdjacentHTML('beforeend', buildVideoNode(node))
-					}
-					getListElement().innerHTML = "";
-					getVideosFromServer(queryString).then(mapValues).then(nodes => nodes.map(appendVideo));
+                        /*
+                        const queryString = li.textContent;
+                        
+                        const makeUrl = filename => `https://isolatedsigns.s3.amazonaws.com/${encodeURI(filename)}`;
+                        const getUrlFromNode = node => node.url.split("/")[3];
+                        const buildUrl = node => makeUrl(getUrlFromNode(node));
+                        const buildVideosSearchUrl = query => `https://cklvhhyl66.execute-api.us-east-1.amazonaws.com/?word=${query}`
+                        const getVideosFromServer = query => fetch(buildVideosSearchUrl(query)).then(response => response.json())
+                        const makeUrlSentences = filename => `https://sentencesigns.s3.amazonaws.com/${encodeURI(filename)}`;
+                        const getUrlFromNodeSentences = node => node.urlSentence.split("/")[3];
+                        const buildUrlSentence = node => makeUrlSentences(getUrlFromNodeSentences(node));
+                        const mapValues = nodes => nodes.map(node => ({label: node.sign_gloss, imageUrl: buildUrl(node)}));
+                        const mapValuesSentences = nodes => nodes.map(node => ({label: node.text, imageUrl: buildUrlSentence(node)}));
+                        const getListElement = () => document.getElementById("products-list");
+                        const getListSentence = () => document.getElementById("sentences-list");
+                        const buildVideoNode = ({ label, imageUrl}) =>
+                        `
+                            <div class="product-item" category="adjectives">
+                                <video height="205px" width="205px" controls>
+                                    <source src="${imageUrl}" type="video/mp4">
+                                </video>
+                                <a href="#">${label}</a>
+                            </div>
+                        `
 
+                        const appendVideo = node => {
+                            getListElement().insertAdjacentHTML('beforeend', buildVideoNode(node))
+                        }
+                        getListElement().innerHTML = "";
+                        getVideosFromServer(queryString).then(mapValues).then(nodes => nodes.map(appendVideo));
+                        */
                     });
+                    getListElement.appendChild(ul);
                     //document.getElementById("products-list").appendChild(ul);
 
 

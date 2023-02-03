@@ -64,29 +64,32 @@
             2. Include a video element that will display the current video stream
             and as well to show the recorded video at the end.
             -->
+            <div class="general-side">
+                <div class="left-side">
+                    <div class="lsp-video" id="video">
+                        <div class="video-container">
+                            <video autoplay=""id="my-preview" class="video-preview" style="width: 700px;"></video>
+                            <canvas id="canvas" style="width: 700px;"></canvas>   
+                            <div id="countdown" class="countdown">Iniciando...</div> 
+                            <div class="spinner-grow text-danger record-icon" role="status" id="record-icon" ></div>
+                        </div>
 
-            <div class="lsp-video" id="video">
-            <div class="video-container">
-                <video autoplay=""id="my-preview" class="video-preview" style="width: 700px;"></video>
-                <canvas id="canvas" style="width: 700px;"></canvas>   
-                <div id="countdown" class="countdown">Iniciando...</div> 
-                <div class="spinner-grow text-danger record-icon" role="status" id="record-icon" ></div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-5 mt-5">                
-                    <div id="face" class="rectangle1"></div>
-                    <div id="hand1" class="rectangle2"></div>
-                    <div id="hand2" class="rectangle3"></div>                                               
+                        <div class="row">
+                            <div class="col-md-5 mt-5">                
+                                <div id="face" class="rectangle1"></div>
+                                <div id="hand1" class="rectangle2"></div>
+                                <div id="hand2" class="rectangle3"></div>                                               
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            </div>
-                            
-            <!-- <p id="percentage">
-            </p> -->
-            <div id="results" >
-            </div>
-      
+                <div class="right-side">          
+                    <!-- <p id="percentage">
+                    </p> -->
+                    <div id="results" >
+                    </div>
+                </div>  
+            
 
        <div id="left-side" ></div>
             <div class="container" style="margin-left: 20%">
