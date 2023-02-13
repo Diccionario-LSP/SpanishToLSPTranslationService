@@ -198,7 +198,7 @@ function startRecording(){
                 countdown.innerHTML = timeLeft;
             }
             timeLeft-=1;
-        },1000);
+        },500);
     
         // Display a live preview on the video element of the page
         setSrcObject(stream, video);
