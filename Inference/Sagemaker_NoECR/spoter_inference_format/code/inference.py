@@ -6,7 +6,7 @@ import torch
 import json
 import sys
 import os
-
+import boto3
 import logging
 
 from collections import OrderedDict
@@ -33,7 +33,7 @@ NUM_CLASSES = {
     "AEC": 28,
     "PUCP_PSL_DGI156": 29,
     "WLASL": 86,
-    "AEC-DGI156-DGI305":72
+    "AEC-DGI156-DGI305":29
 }
 
 logger.warning('HIDDEN_DIM and NUM_CLASSES - READY')
@@ -163,20 +163,35 @@ def frame_process(holistic, frame):
     return data
 
 
-def preprocess_video():
+def preprocess_video(data):
     model_key_getter = {'mediapipe': get_mp_keys,
                     'openpose': get_op_keys,
                     'wholepose': get_wp_keys}
 
     model_key_getter = model_key_getter['mediapipe']
 
-    # 71 points
-    num_joints = 29
+    # 71 or 29 points
+    num_joints = 71
+    
     points = pd.read_csv(f"./code/points_{num_joints}.csv")
 
-    input_path = 'code/Data/mp4/casa_1418.mp4'
-    path = input_path
+    logger.warning("LOADING DATA FROM S3")
+    bucket_name = 'user-video-test'
+    file_path = data
 
+    logger.warning(file_path, file_path)
+
+    s3 = boto3.client('s3',
+                       endpoint_url='https://s3.us-east-1.amazonaws.com')
+    # Descarga el archivo y guarda una copia localmente
+    s3.download_file(bucket_name, file_path, f'../{data}')
+
+    logger.warning("DATA LOADED")
+    input_path = f'../{data}'
+
+    #input_path = 'code/Data/mp4/casa_1418.mp4'
+    path = input_path
+    logger.warning(path)
     mp_holistic = mp.solutions.holistic
     holistic = mp_holistic.Holistic()
 
@@ -217,9 +232,9 @@ def preprocess_keypoints(data):
 
     return depth_map
 
-def preproccess():
+def preproccess(data):
     logger.warning("PREPROCESS_VIDEO")
-    data = preprocess_video()
+    data = preprocess_video(data)
     logger.warning("PREPROCESS_KEYPOINT")
     data = preprocess_keypoints(data)
 
@@ -250,27 +265,54 @@ def load_model(path):
 
 #####################################################################################
 # SAGEMAKER PYTORCH SERVE DEF
+#
+# It have to be necessary these four def:
+#
+# def input_fn(request_body, request_content_type)
+# def model_fn(model_dir)
+# def predict_fn(input_data, model)
+# def output_fn(prediction, content_type)
 
+
+
+########################
+#  This function receive a Json call from AWS Lambda and retrieve the information (the video name)
+#  Then preprocess the data using a process similarly than ConnectingPoints repository 
+########################
 def input_fn(request_body, request_content_type):
     logger.warning(f'initialize input_fn - {request_content_type}')
     #logger.warning(request_body)
     """An input_fn that loads a pickled tensor"""
     if request_content_type == 'application/json':
-        pass
+        data_json = json.loads(request_body)
+        data = data_json["uniqueName"]
         #return torch.load(BytesIO(request_body))
     else:
         # Handle other content-types here or raise an Exception
+        raise ValueError("The message content type should be Json to process the information")
         # if the content type is not supported.
         pass
     
-    data = preproccess()
+    data = preproccess(data)
 
     #data = torch.Tensor(data)
     #data = Variable(data.float().cpu(), requires_grad=False)
 
     return data #"input"#data.transpose(3,1).transpose(2,3)
 
+########################
+# This function load the pre-trained model for SLR
+########################
+def model_fn(model_dir): 
+    logger.warning(f'model_fn - {model_dir}')
+    model = load_model(model_dir)
+    return model
 
+########################
+# This function use the two outputs from "model_fn" and "input_fn"
+# and to do the inference
+# Note: the model has to be set to CPU
+########################
 def predict_fn(input_data, model):
     logger.warning("predict_fn")
     device = torch.device('cpu')
@@ -282,13 +324,15 @@ def predict_fn(input_data, model):
 
     return output
 
-
-def model_fn(model_dir): 
-    logger.warning(f'model_fn - {model_dir}')
-    model = load_model(model_dir)
-    return model
-
-
+########################
+# this function use the result from "predict_fn".
+# I manually check the contect_type value and it is "application/json" I believe that this is the same
+# than the type asked when AWS Lambda funciton call the inference (but maybe is the default value).
+#
+# The prediction is process to get the top 5
+# then, using "meaning.json" we retrieve the word in spanish from the label
+# then the information is formated to be sent to AWS Lambda as a response
+########################
 def output_fn(prediction, content_type):
     logger.warning(f'output_fn - {content_type}')
     _, predict_label = torch.topk(prediction.data, 5)
@@ -313,7 +357,7 @@ def output_fn(prediction, content_type):
 
     return response
 
-#data = input_fn("","")
+#data = input_fn("0.06059369029321049.webm","application/json")
 #model = model_fn('model.pth')
 #pred = predict_fn(data, model)
 #print(output_fn(pred, "application/json",''))
