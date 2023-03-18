@@ -36,8 +36,9 @@ pytorch_model = PyTorchModel(
 If all was ok, you will see a charging bar that means the inference is being created. 
 You can check it in Sagemaker endpoint dashboard 
 '''
+
 print("deploying the model in sagemaker endpoint...")
 predictor = pytorch_model.deploy(
     instance_type='ml.t2.medium',
-    endpoint_name='spoter-Sagemaker-Endpoint',
-    initial_instance_count=1)
+    endpoint_name='spoter-Sagemaker-Endpoint-video-2i-27c-60a-top5',
+    initial_instance_count=2)
