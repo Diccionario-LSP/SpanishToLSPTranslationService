@@ -28,5 +28,5 @@ Remember to modify the configuration json file located in "configuration" folder
 # General overview of the model we use
 
 <p align="center">
-  <img src="./inference-process.jpg" alt="inference" width="738">
+  <img src="./inference-process.jpg" alt="inference" width="900">
 </p>
