@@ -70,17 +70,17 @@ Upon successfully cloning the repository into your local development environment
 
 ```
 ├─ assets  
-├─ configuration                    [carpeta con archivo config.json con credenciales de AWS (credenciales vacías*)]
-├─ Inference                        [carpeta que contiene scripts y subcarpetas para implementación]
-│  ├─ deploy.py                     [script en Python para implementar el código de inferencia]
-│  └─ spoter_inference_format       [subcarpeta para implementación]
-│     ├─ code                       [subcarpeta que contiene el código del modelo a implementar]
-│     └─ model.pth                  [archivo que contiene el modelo pre-entrenado para implementación]
-├─ website                          [carpeta que contiene el código fuente de la implementación del front-end]
-├─ .gitignore                       
-├─ .git                             
-├─ LICENSE                          
-└─ README.MD  [archivo que contiene la descripción y las instrucciones del proyecto]
+├─ configuration                    [folder with config.json file with AWS credentials (empty credentials*)]
+├─ Inference                        [folder containing deploy scripts and subfolder for deployment]
+│  ├─ deploy.py                     [Python script to deploy Inference code]
+│  └─ spoter_inference_format       [subfolder for deployment]
+│     ├─ code                       [subfolder containing code of the model to be deployed]
+│     └─ model.pth                  [file containing pre-trained model for deployment]
+├─ website                          [folder containing source code of the front-end implementation]
+├─ .gitignore                       [file specifying which files Git should ignore]
+├─ .git                             [folder containing Git repository information]
+├─ LICENSE                          [file containing software license information]
+└─ README.MD  [file containing project description and instructions]
 
 ```
 ## References
