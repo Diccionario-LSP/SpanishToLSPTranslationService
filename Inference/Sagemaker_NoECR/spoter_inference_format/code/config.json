@@ -4,13 +4,12 @@
         "num_backups": 4,
         "keypoints_model": "mediapipe",
         "lr": 0.0005,
-        "keypoints_number": 71,
-
+        "keypoints_number": 108,
+        "num_classes":50,
         "nhead": 2,
         "num_encoder_layers":2,
         "num_decoder_layers":2,
         "dim_feedforward":256,
-
         "experimental_train_split": null,
         "validation_set": "from-file",
         "validation_set_size": null,

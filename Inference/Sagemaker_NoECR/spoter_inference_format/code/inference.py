@@ -23,19 +23,6 @@ c_handler.setFormatter(c_format)
 logger.addHandler(c_handler)
 
 
-HIDDEN_DIM = {
-    "29": 58,
-    "51": 102,
-    "71": 142
-}
-
-NUM_CLASSES = {
-    "AEC": 28,
-    "PUCP_PSL_DGI156": 29,
-    "WLASL": 86,
-    "AEC-DGI156-DGI305":29
-}
-
 logger.warning('HIDDEN_DIM and NUM_CLASSES - READY')
 
 def get_mp_keys(points):
@@ -67,7 +54,7 @@ def configure_model(config_file, use_wandb):
 
     config = dict(
         #hidden_dim = config_file["hparams"]["hidden_dim"],
-        #num_classes = config_file["hparams"]["num_classes"],
+        num_classes = config_file["hparams"]["num_classes"],
         epochs = config_file["hparams"]["epochs"],
         num_backups = config_file["hparams"]["num_backups"],
         keypoints_model = config_file["hparams"]["keypoints_model"],
@@ -127,15 +114,14 @@ def frame_process(holistic, frame):
     if(holisResults.left_hand_landmarks):
         left_hand = [ [point.x, point.y] for point in holisResults.left_hand_landmarks.landmark]
     else:
-        left_hand = [ [0.0, 0.0] for point in range(0, 21)]
+        left_hand = [ [pose[15][0], pose[15][1]] for point in range(0, 21)]
     left_hand = np.asarray(left_hand)
 
     # Right hand
     if(holisResults.right_hand_landmarks):
         right_hand = [ [point.x, point.y] for point in holisResults.right_hand_landmarks.landmark]
-
     else:
-        right_hand = [ [0.0, 0.0] for point in range(0, 21)]
+        right_hand = [[pose[16][0], pose[16][1]] for point in range(0, 21)]
     right_hand = np.asarray(right_hand)
 
     # Face mesh
@@ -148,12 +134,15 @@ def frame_process(holistic, frame):
         face = [[0.0, 0.0] for point in range(0, 468)]
     face = np.asarray(face)
 
+    neck = (pose[11] + pose[12]) / 2
+
     newFormat = []
 
     newFormat.append(pose)
     newFormat.append(face)
     newFormat.append(left_hand)
     newFormat.append(right_hand)
+    newFormat.append([neck])
 
     x = np.asarray([item[0] for sublist in newFormat for item in sublist])
     y = np.asarray([item[1] for sublist in newFormat for item in sublist])
@@ -171,7 +160,7 @@ def preprocess_video(data):
     model_key_getter = model_key_getter['mediapipe']
 
     # 71 or 29 points
-    num_joints = 71
+    num_joints = 54
     
     points = pd.read_csv(f"./code/points_{num_joints}.csv")
 
@@ -226,7 +215,169 @@ def preprocess_video(data):
 
     return result
 
+##########################################################
+# Process used to normalize the pose
+##########################################################
+def normalize_pose(data, body_dict):
+
+    valid_sequence = True
+
+    last_starting_point, last_ending_point = None, None
+
+    # Prevent from even starting the analysis if some necessary elements are not present
+    if (data[body_dict['pose_left_shoulder']][0] == 0.0 or data[body_dict['pose_right_shoulder']][0] == 0.0):
+        if not last_starting_point:
+            valid_sequence = False
+        else:
+            starting_point, ending_point = last_starting_point, last_ending_point
+
+    else:
+
+        # NOTE:
+        #
+        # While in the paper, it is written that the head metric is calculated by halving the shoulder distance,
+        # this is meant for the distance between the very ends of one's shoulder, as literature studying body
+        # metrics and ratios generally states. The Vision Pose Estimation API, however, seems to be predicting
+        # rather the center of one's shoulder. Based on our experiments and manual reviews of the data, employing
+        # this as just the plain shoulder distance seems to be more corresponding to the desired metric.
+        #
+        # Please, review this if using other third-party pose estimation libraries.
+
+        if data[body_dict['pose_left_shoulder']][0] != 0 and data[body_dict['pose_right_shoulder']][0] != 0:
+            
+            left_shoulder = data[body_dict['pose_left_shoulder']]
+            right_shoulder = data[body_dict['pose_right_shoulder']]
+
+            shoulder_distance = ((((left_shoulder[0] - right_shoulder[0]) ** 2) + (
+                                    (left_shoulder[1] - right_shoulder[1]) ** 2)) ** 0.5)
+
+            mid_distance = (0.5,0.5)#(left_shoulder - right_shoulder)/2
+            head_metric = shoulder_distance/2
+        '''
+        # use it if you have the neck keypoint
+        else:
+            neck = (data["neck_X"], data["neck_Y"])
+            nose = (data["nose_X"], data["nose_Y"])
+            neck_nose_distance = ((((neck[0] - nose[0]) ** 2) + ((neck[1] - nose[1]) ** 2)) ** 0.5)
+            head_metric = neck_nose_distance
+        '''
+        # Set the starting and ending point of the normalization bounding box
+        starting_point = [mid_distance[0] - 3 * head_metric, data[body_dict['pose_right_eye']][1] - (head_metric / 2)]
+        ending_point = [mid_distance[0] + 3 * head_metric, mid_distance[1] + 4.5 * head_metric]
+
+        last_starting_point, last_ending_point = starting_point, ending_point
+
+    # Normalize individual landmarks and save the results
+    for pos, kp in enumerate(data):
+        
+        # Prevent from trying to normalize incorrectly captured points
+        if data[pos][0] == 0:
+            continue
+
+        normalized_x = (data[pos][0] - starting_point[0]) / (ending_point[0] -
+                                                                                starting_point[0])
+        normalized_y = (data[pos][1] - ending_point[1]) / (starting_point[1] -
+                                                                                ending_point[1])
+
+        data[pos][0] = normalized_x
+        data[pos][1] = 1 - normalized_y
+            
+    return data
+################################################
+# Function that normalize the hands (but also the face)
+################################################
+def normalize_hand(data, body_section_dict):
+    """
+    Normalizes the skeletal data for a given sequence of frames with signer's hand pose data. The normalization follows
+    the definition from our paper.
+    :param data: Dictionary containing key-value pairs with joint identifiers and corresponding lists (sequences) of
+                that particular joints coordinates
+    :return: Dictionary with normalized skeletal data (following the same schema as input data)
+    """
+
+    sequence_size = data.shape[0]
+    
+    # Treat each element of the sequence (analyzed frame) individually
+
+
+    # Retrieve all of the X and Y values of the current frame
+    landmarks_x_values = data[:, 0]
+    landmarks_y_values = data[:, 1]
+
+    # Prevent from even starting the analysis if some necessary elements are not present
+    #if not landmarks_x_values or not landmarks_y_values:
+    #    continue
+
+    # Calculate the deltas
+    width, height = max(landmarks_x_values) - min(landmarks_x_values), max(landmarks_y_values) - min(
+        landmarks_y_values)
+    if width > height:
+        delta_x = 0.1 * width
+        delta_y = delta_x + ((width - height) / 2)
+    else:
+        delta_y = 0.1 * height
+        delta_x = delta_y + ((height - width) / 2)
+
+    # Set the starting and ending point of the normalization bounding box
+    starting_point = (min(landmarks_x_values) - delta_x, min(landmarks_y_values) - delta_y)
+    ending_point = (max(landmarks_x_values) + delta_x, max(landmarks_y_values) + delta_y)
+
+    # Normalize individual landmarks and save the results
+    for pos, kp in enumerate(data):
+
+        # Prevent from trying to normalize incorrectly captured points
+        if data[pos][0] == 0 or (ending_point[0] - starting_point[0]) == 0 or (
+                starting_point[1] - ending_point[1]) == 0:
+            continue
+
+        normalized_x = (data[pos][0] - starting_point[0]) / (ending_point[0] -
+                                                                                starting_point[0])
+        normalized_y = (data[pos][1] - starting_point[1]) / (ending_point[1] -
+                                                                                starting_point[1])
+
+        data[pos][0] = normalized_x
+        data[pos][1] = normalized_y
+
+    return data
+
+###################################################################################
+# This function normalize the body and the hands separately
+# body_section has the general body part name (ex: pose, face, leftHand, rightHand)
+# body_part has the specific body part name (ex: pose_left_shoulder, face_right_mouth_down, etc)
+###################################################################################
+def normalize_pose_hands_function(data, body_section, body_part):
+
+    pose = [pos for pos, body in enumerate(body_section) if body == 'pose' or body == 'face']
+    face = [pos for pos, body in enumerate(body_section) if body == 'face']
+    leftHand = [pos for pos, body in enumerate(body_section) if body == 'leftHand']
+    rightHand = [pos for pos, body in enumerate(body_section) if body == 'rightHand']
+
+    body_section_dict = {body:pos for pos, body in enumerate(body_part)}
+
+    assert len(pose) > 0 and len(leftHand) > 0 and len(rightHand) > 0 #and len(face) > 0
+
+    for index_video in range(len(data)):
+        data[index_video][pose,:] = normalize_pose(data[index_video][pose,:], body_section_dict)
+        #data[index_video][face,:] = normalize_hand(data[index_video][face,:], body_section_dict)
+        data[index_video][leftHand,:] = normalize_hand(data[index_video][leftHand,:], body_section_dict)
+        data[index_video][rightHand,:] = normalize_hand(data[index_video][rightHand,:], body_section_dict)
+
+    return data
+
 def preprocess_keypoints(data):
+
+    # Spoter format
+    df_keypoints = pd.read_csv("./code/Mapeo landmarks librerias.csv", skiprows=1)
+    df_keypoints = df_keypoints[(df_keypoints['Selected 54']=='x')]
+    body_part = (df_keypoints['Section']+'_'+df_keypoints['Key']).values
+    body_section = df_keypoints['Section']
+
+    data = np.moveaxis(data, 1, 2)
+
+    data = normalize_pose_hands_function(data, body_section, body_part)
+
+    #data = np.moveaxis(data, 1, 2)
+
     depth_map = torch.from_numpy(np.copy(data))
     depth_map = depth_map - 0.5
 
@@ -250,13 +401,16 @@ def load_model(path):
     logger.warning(str(config))
     logger.warning("SPOTER")
     logger.warning(F"PATH - {path +'/'+ 'model.pth'}")
-    model = SPOTER(num_classes=NUM_CLASSES[config['dataset']], 
-                        hidden_dim=HIDDEN_DIM[str(config['keypoints_number'])],
+    model = SPOTER(num_classes=config['num_classes'], hidden_dim=config['keypoints_number'])
+    '''
+    model = SPOTER(num_classes=, 
+                        hidden_dim=,
                         dim_feedforward=config['dim_feedforward'],
                         num_encoder_layers=config['num_encoder_layers'],
                         num_decoder_layers=config['num_decoder_layers'],
                         nhead=config['nhead']
                         )
+    '''
     device = torch.device('cpu')
     
     model.load_state_dict(torch.load(path +'/'+ 'model.pth', map_location=device))
@@ -286,6 +440,7 @@ def input_fn(request_body, request_content_type):
     if request_content_type == 'application/json':
         data_json = json.loads(request_body)
         data = data_json["uniqueName"]
+
         #return torch.load(BytesIO(request_body))
     else:
         # Handle other content-types here or raise an Exception
@@ -357,7 +512,7 @@ def output_fn(prediction, content_type):
 
     return response
 
-#data = input_fn("0.06059369029321049.webm","application/json")
+#data = input_fn({"uniqueName":"0.06059369029321049.webm"},"application/json")
 #model = model_fn('model.pth')
 #pred = predict_fn(data, model)
-#print(output_fn(pred, "application/json",''))
+#print(output_fn(pred, "application/json"))

@@ -37,43 +37,28 @@ class SPOTERTransformerDecoderLayer(nn.TransformerDecoderLayer):
 
         return tgt
 
-
 class SPOTER(nn.Module):
     """
     Implementation of the SPOTER (Sign POse-based TransformER) architecture for sign language recognition from sequence
     of skeletal data.
     """
 
-    def __init__(self, num_classes, hidden_dim=55, nhead=2, num_encoder_layers=2, num_decoder_layers=2, dim_feedforward=256):
+    def __init__(self, num_classes, hidden_dim=55):
         super().__init__()
-        print('hidden_dim',hidden_dim)
-        print('num_decoder_layers',num_decoder_layers,'<--------------------')
-       
-        self.row_embed = nn.Parameter(torch.rand(50, hidden_dim))
-        print(self.row_embed.shape)
-        print(nn.Parameter(torch.cat([self.row_embed[0].unsqueeze(0).repeat(1, 1, 1)], dim=-1).flatten(0, 1).unsqueeze(0)).shape)
+
+        self.row_embed = nn.Parameter(torch.rand(1024, hidden_dim))
         self.pos = nn.Parameter(torch.cat([self.row_embed[0].unsqueeze(0).repeat(1, 1, 1)], dim=-1).flatten(0, 1).unsqueeze(0))
         self.class_query = nn.Parameter(torch.rand(1, hidden_dim))
-        self.transformer = nn.Transformer(hidden_dim, nhead=nhead, num_encoder_layers=num_encoder_layers, num_decoder_layers=num_decoder_layers, dim_feedforward=dim_feedforward )
+        self.transformer = nn.Transformer(hidden_dim, 9, 6, 6)
         self.linear_class = nn.Linear(hidden_dim, num_classes)
 
         # Deactivate the initial attention decoder mechanism
-        custom_decoder_layer = SPOTERTransformerDecoderLayer(self.transformer.d_model, self.transformer.nhead, dim_feedforward,
-                                                             0.5, "relu")
+        custom_decoder_layer = SPOTERTransformerDecoderLayer(self.transformer.d_model, self.transformer.nhead, 256,
+                                                             0.1, "relu")
         self.transformer.decoder.layers = _get_clones(custom_decoder_layer, self.transformer.decoder.num_layers)
 
     def forward(self, inputs):
         h = torch.unsqueeze(inputs.flatten(start_dim=1), 1).float()
-        '''
-        print('inputs')
-        #print(inputs)
-        print('inputs',inputs.shape)
-        print('pos',self.pos.shape)
-        print('h',h.shape)
-        print('class_query',self.class_query.unsqueeze(0).shape)
-        #'''
-        aux = self.pos + h
-        
         h = self.transformer(self.pos + h, self.class_query.unsqueeze(0)).transpose(0, 1)
         res = self.linear_class(h)
 
