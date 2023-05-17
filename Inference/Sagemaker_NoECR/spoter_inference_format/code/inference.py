@@ -185,10 +185,10 @@ def preprocess_video(data):
     holistic = mp_holistic.Holistic()
 
     cap = cv2.VideoCapture(path)
-    length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    #length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    frame_width = int(cap.get(3))
-    frame_height = int(cap.get(4))
+    #frame_width = int(cap.get(3))
+    #frame_height = int(cap.get(4))
 
     print(path)
 
@@ -210,6 +210,8 @@ def preprocess_video(data):
         output_list.append(pred)
 
         success, img = cap.read()
+
+    holistic.close()
 
     result = np.asarray(output_list)
 
