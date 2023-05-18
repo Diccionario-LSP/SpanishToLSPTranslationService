@@ -12,9 +12,7 @@
 <!-- [📚Documentation](https://deeplabcut.github.io/DeepLabCut/README.html) |
 [🛠️ Installation](https://deeplabcut.github.io/DeepLabCut/docs/installation.html) | -->
 [✌️Dictionary LSP](https://www.dvlsp.link) |
-[🗃️PeruSIL Database](http://www.mackenziemathislab.org/dlc-modelzoo/) 
-<!-- [🚨 News](https://deeplabcut.github.io/DeepLabCut/README.html#news-and-in-the-news) | -->
-<!-- [🪲 Reporting Issues](https://github.com/DeepLabCut/DeepLabCut/issues)  -->
+[🗃️PeruSIL Database](https://github.com/gissemari/PeruvianSignLanguage) 
 
 
 
