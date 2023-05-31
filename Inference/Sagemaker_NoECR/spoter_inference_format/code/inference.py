@@ -473,6 +473,11 @@ def model_fn(model_dir):
 def predict_fn(input_data, model):
     logger.warning("predict_fn")
     device = torch.device('cpu')
+    logger.warning("initially set to use CPU")
+    if torch.cuda.is_available():
+        torch.cuda.set_device(0)
+        logger.warning("Now using CUDA")
+        device = torch.device("cuda")
     model.to(device)
     model.eval()
 

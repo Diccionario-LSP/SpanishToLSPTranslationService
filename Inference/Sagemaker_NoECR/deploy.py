@@ -1,5 +1,6 @@
 from sagemaker.pytorch import PyTorchModel
 from sagemaker import get_execution_role
+from sagemaker.serverless import ServerlessInferenceConfig
 #from sagemaker.autoscaling import ScalingPolicy
 
 import os
@@ -43,32 +44,53 @@ You can check it in Sagemaker endpoint dashboard
 
 print("deploying the model in sagemaker endpoint...")
 predictor = pytorch_model.deploy(
-    instance_type='ml.c6g.large',
-    endpoint_name='spoter-Sagemaker-Endpoint-AutScalFrom1to10-50c-69a-top5',
+    instance_type= 'ml.g4dn.xlarge',#'ml.c6g.large',
+    endpoint_name='spoter-Sagemaker-Endpoint-serverless-50c-69a-top5',
+    serverless_inference_config=ServerlessInferenceConfig(
+        max_concurrency=8,
+        memory_size_in_mb=1024*3),
     initial_instance_count=1)
 
+'''
 # Prepare AutoScaling
 asg_client = boto3.client('application-autoscaling') # Common class representing Application Auto Scaling for SageMaker amongst other services
 resource_id=f"endpoint/{predictor.endpoint_name}/variant/AllTraffic"
 response = asg_client.register_scalable_target(
     ServiceNamespace='sagemaker', #
     ResourceId=resource_id,
-    ScalableDimension='sagemaker:variant:DesiredInstanceCount',
-    MinCapacity=1,
-    MaxCapacity=10
+    ScalableDimension='sagemaker:variant:DesiredInstanceCount', #"DesiredProvisionedConcurrency"
+    MinCapacity=0,
+    MaxCapacity=8,
 )
 
-'''
-auto_scaling_config = ScalingPolicy(
-    policy_name='AutoScalingPolicy',
-    target_tracking_scaling_policy_configuration=TargetTrackingScalingPolicyConfiguration(
-        target='CPUUtilization',
-        target_value=50.0,
-        scale_in_cooldown=8,
-        scale_out_cooldown=8)
+print(response)
+
+response = asg_client.put_scaling_policy(
+    PolicyName='Invocations-ScalingPolicy',
+    ServiceNamespace='sagemaker', # The namespace of the AWS service that provides the resource. 
+    ResourceId=resource_id, # Endpoint name 
+    ScalableDimension='sagemaker:variant:DesiredInstanceCount', # SageMaker supports only Instance Count
+    PolicyType='TargetTrackingScaling', # 'StepScaling'|'TargetTrackingScaling'
+    TargetTrackingScalingPolicyConfiguration={
+        'TargetValue': 5.0, # The target value for the metric. 
+        'CustomizedMetricSpecification': {
+            'MetricName': 'ApproximateBacklogSizePerInstance',
+            'Namespace': 'AWS/SageMaker',
+            'Dimensions': [
+                {'Name': 'EndpointName', 'Value': predictor.endpoint_name }
+            ],
+            'Statistic': 'Average',
+        },
+        'ScaleInCooldown': 8, # The cooldown period helps you prevent your Auto Scaling group from launching or terminating 
+                                # additional instances before the effects of previous activities are visible. 
+                                # You can configure the length of time based on your instance startup time or other application needs.
+                                # ScaleInCooldown - The amount of time, in seconds, after a scale in activity completes before another scale in activity can start. 
+        'ScaleOutCooldown': 8 # ScaleOutCooldown - The amount of time, in seconds, after a scale out activity completes before another scale out activity can start.
+        
+        # 'DisableScaleIn': True|False - ndicates whether scale in by the target tracking policy is disabled. 
+                            # If the value is true , scale in is disabled and the target tracking policy won't remove capacity from the scalable resource.
+    }
 )
 
-predictor.configure_auto_scaling(
-    auto_scaling_config=auto_scaling_config
-)
+print(response)
 '''
