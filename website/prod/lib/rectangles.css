@@ -1,0 +1,48 @@
+.rectangle1 {
+  border: 2px solid red;
+  height: 20vw;
+  max-width: 200px;
+  min-width: 100px;
+  width: 40vw;
+  max-height: 200px;
+  min-height: 100px;
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  visibility:hidden;
+  z-index: 2;
+}
+  
+.rectangle2 {
+  border: 2px solid red;
+  height: 20vw;
+  max-width: 150px;
+  min-width: 100px;
+  width: 20vw;
+  max-height: 150px;
+  min-height: 100px;
+  position: absolute;
+  top: 150%;
+  left: -60%;
+  transform: translateX(-50%);
+  visibility:hidden;
+  z-index: 2;
+  }
+
+.rectangle3 {
+  border: 2px solid red;
+  height: 20vw;
+  max-width: 150px;
+  min-width: 100px;
+  width: 20vw;
+  max-height: 150px;
+  min-height: 100px;
+  position: absolute;
+  top:150%;
+  left: 150%;
+  transform: translateX(-50%);
+  visibility:hidden;
+  z-index: 2;
+  }
+

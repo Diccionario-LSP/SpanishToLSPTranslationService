@@ -13,13 +13,18 @@ const getListElement = () => document.getElementById("products-list");
 const getListSentence = () => document.getElementById("sentences-list");
 const buildVideoNode = ({ label, imageUrl}) =>
 `
-    <div class="product-item" category="adjectives">
-        <video height="205px" width="205px" controls>
-            <source src="${imageUrl}" type="video/mp4">
-        </video>
-        <a href="#">${label}</a>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-4 ml-3">
+        <div class="card h-100 shadow rounded" style="margin-right: 20px;" category="adjectives">
+            <video class="card-img-top" height="205px" width="205px" controls>
+                <source src="${imageUrl}" type="video/mp4">
+            </video>
+            <div class="card-body rounded-bottom" style="background-color: #163297">
+                <h5 class="card-title text-white">${label}</h5>
+            </div>
+        </div>
     </div>
-`
+`;
+
 const appendVideo = node => {
     getListElement().insertAdjacentHTML('beforeend', buildVideoNode(node))
 }
