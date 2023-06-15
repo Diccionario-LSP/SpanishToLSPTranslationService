@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Holistic } from "@mediapipe/holistic";
 import { Camera } from "@mediapipe/camera_utils";
-
+import AWS from 'aws-sdk';
 
 export default function WebcamRecord() {
   // CAMERA
@@ -9,7 +9,8 @@ export default function WebcamRecord() {
   const cameraRef = useRef(null);
   const recordingRef = useRef(false);
   const inPreparationRef = useRef(false);
-
+  const streamRef = useRef(null);
+  
   // RECORDS
   const [accumulatedResults, setAccumulatedResults] = useState([]);
   const [capturing, setCapturing] = useState(false);
@@ -20,6 +21,9 @@ export default function WebcamRecord() {
   const doHolisticRef = useRef(false);
   const detectingHandsRef = useRef(true);
 
+  // CHUNKS
+  const recordedChunksRef = useRef([]);
+
   //SQUARES
   const [showSquares, setShowSquares] = useState(false)
 
@@ -28,45 +32,161 @@ export default function WebcamRecord() {
   // eslint-disable-next-line
   const [message, setMessage] = useState("");
 
+  // AWS
+  const bucketRef = useRef("");
+  const [results, setResults] = useState([]);
+
+
   // Function to set the message value
   const updateMessage = useCallback((newMessage) => {
     setMessage(newMessage);
     messageRef.current = newMessage
   },[]);
 
-  // Function to stop the capture
-  const handleStopCapture = useCallback(() => {
-    updateMessage("procesando...");
-    console.log("deteniendo");
-    doHolisticRef.current = false;
-    setCapturing(false);
-  }, [updateMessage]);
+  ///////////////////////////////
+  // AWS
+  ///////////
+
+  useEffect(() => {
+    AWS.config.region = 'us-east-1';
+
+    AWS.config.update({
+      region: 'us-east-1',
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'us-east-1:b5013574-2741-4e18-97be-9395b5929162',
+      }),
+    });
+  
+    AWS.config.credentials.get((err) => {
+      if (err) {
+        console.error('Error retrieving AWS credentials:', err);
+      } else {
+        console.log('AWS credentials successfully initialized');
+    
+        // You can now use the credentials to make authenticated requests to other AWS services
+      }
+    });
+    
+    var bucketName = 'user-video-test'; // Enter your bucket name+
+    bucketRef.current = new AWS.S3({
+      params: {
+        Bucket: bucketName
+      }
+    });
+  },[])
+
+  // Enviar video a S3
+  function uploadToS3(blob, filename) {
+
+    console.log("subiendo a S3")
+    var uploadParams = {Key: filename, ContentType: 'video/webm', Body: blob};
+    bucketRef.current.upload(uploadParams, function(err, data) {
+      if (err) {
+        console.log('Error uploading file:', err);
+      } else {
+        console.log('File uploaded successfully:', data.Location);
+
+        // Solamente se le envia el nombre del video a AWS Lambda 
+
+        /**
+         * El proceso es el siguiente:
+         * 
+         *  - 1) Se envía el video a S3
+         *  - 2) Se envía el nombre del video a lambda
+         *  - 3) lambda se lo envía a Sagemaker con otro formato
+         *  - 4) Sagemaker recupera el video y lo procesa
+         *  - 5) le devuelve el resultado a Lambda
+         *  - 6) se devuelve el resultado a la web 
+         * 
+         */
+        const lambda = new AWS.Lambda();
+        const lambdaParams = {
+          FunctionName: 'sagemaker-invoker',
+          Payload: JSON.stringify({
+            video: uploadParams.Key
+          })
+        };
+
+        lambda.invoke(lambdaParams, function(err, data) {
+          if (err) {
+            console.log('Error invoking Lambda function:', err);
+          } else {
+            const glossListStr = data.Payload;
+            const glossList = JSON.parse(glossListStr);
+            const words = [];
+
+            for (const key in glossList) {
+              if (glossList.hasOwnProperty(key)) {
+                const glossObj = glossList[key];
+                const gloss = glossObj.gloss;
+                words.push(gloss);
+              }
+            }
+            console.log(words);
+            setResults(words);
+            detectingHandsRef.current = true;
+            setShowSquares(true)
+            updateMessage("¿Nueva predicción? ubíquese correctamente");
+            // Perform further operations with the Lambda function's response
+          }
+        });
+      }
+    });
+  }
+
+  ///////////////////////////////
+  // DURANTE LA GRABACIÓN
+  ///////////
 
   // Function to start the capture
-  const handleStartCapture = useCallback(() => {
+  function handleStartCapture() {
     updateMessage("grabando");
     setCapturing(true);
-    doHolisticRef.current = true;
-    setTimeout(handleStopCapture, 2000); // Stop recording after 2 seconds
-  }, [handleStopCapture, updateMessage]);
 
-  // UseEffect to handle the accumulated results and trigger further actions
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      if (!capturing && accumulatedResults.length > 0) {
-        console.log("running handleDownload");
-        console.log(accumulatedResults);
-        setAccumulatedResults([]);
-        detectingHandsRef.current = true;
-        // handleModelProcess();
-        updateMessage("Póngase en posición")
-        setShowSquares(true)
-      }
+    try {
+      const mediaRecorder = new MediaRecorder(streamRef.current, { mimeType: "video/webm" });
+
+      mediaRecorder.ondataavailable = (event) => {
+        recordedChunksRef.current.push(event.data);
+      };
+      mediaRecorder.start(100);
+      setCapturing(true);
+      setTimeout(() => {
+        updateMessage("procesando...");
+        mediaRecorder.stop();
+        setCapturing(false);
+        handleStopCapture();
+      }, 2000);
+    } catch (e) {
+      console.error('Exception while creating MediaRecorder: ' + e);
+      return;
     }
-  }, [capturing, accumulatedResults, setAccumulatedResults, updateMessage]);
+  }
 
+  const handleStopCapture = useCallback(async () => {
+    const recordedChunks = recordedChunksRef.current;
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    console.log("Recorded chunks:", recordedChunks.length);
+    console.log("Blob:", blob);
+
+    try {
+      const randomNumber = Math.random()
+      const result = await uploadToS3(blob, randomNumber +'.webm');
+      console.log('Upload successful:', result);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
+
+    // Further processing or uploading of the recorded video blob
+    // e.g., send it to the server or save it locally
+
+    recordedChunksRef.current = [];
+    
+  }, []);
+
+  ///////////////////////////////
+  // CONTEO HACIA ATRAS (ANTES DE GRABAR)
+  ///////////
 
   // Give the user some seconds before recording
   const preparation = () => {
@@ -85,8 +205,24 @@ export default function WebcamRecord() {
     }, 900);
   };
 
+  ///////////////////////////////
+  // FUNCIÓN DURANTE LA DETECCIÓN DE KEYPOINTS
+  ///////////
+
   // Function to get keypoint landmarks from mediapipe
   function onResults(results) {
+
+    /**
+     * Mediapipe ya devuelve los resultados normalizado
+     * Por lo que no es necesario calcular el porcentaje
+     * con respecto al tamaño de la cámara.
+     * 
+     * el valor de los keypoints suelen estar entre 0 a 1
+     * pero puede ser negativo o mayor a uno si el modelo
+     * predice que el punto podria estar ligeramente
+     * fuera del video
+     */
+
     if(messageRef.current === "Cargando modelos..."){
       updateMessage("Póngase en posición")
       setShowSquares(true)
@@ -148,6 +284,9 @@ export default function WebcamRecord() {
   }
 
 
+  ///////////////////////////////
+  // INICIARLIZAR LA CÁMARAEL MODELO Y LA CÁMARA
+  ///////////
   const prepareCameraHolistic = () => {
     return new Promise((resolve, reject) => {
       // Create video element
@@ -179,7 +318,7 @@ export default function WebcamRecord() {
   const initializeHolistic = () => {
     return new Promise((resolve, reject) => {
       const holistic = new Holistic({
-        locateFile: (file) => {
+        locateFile: (file) => {  //aquí se hace la importancion desde la carpeta local en public
           return `./mediapipe/holistic/${file}`;
         },
       });
@@ -215,30 +354,36 @@ export default function WebcamRecord() {
     });
   };
   
-
+  ///////////////////////////////
+  // TERMINAR LOS PROCESOS ABIERTOS AL CERRAR, ACTUALIZAR O CAMBIAR DE PESTAÑA
+  ///////////
   useEffect(() => {
     return () => {
       console.log("Closing camera");
       if (cameraRef.current && cameraRef.current.close) {
         cameraRef.current.close();
       }
+      if(streamRef.current){
+        streamRef.current = null
+      }
     };
   }, []);
 
-   
+  ///////////////////////////////
+  // INICIARLIZAR LA CÁMARA
+  ///////////
   useEffect(() => {
-    let stream = null;
-
     const handleUserMedia = async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        webcamRef.current.srcObject = stream;
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Miraaaa ->", streamRef.current)
+        webcamRef.current.srcObject = streamRef.current;
 
-        // Perform actions or handle events when the webcam stream is loaded
+        // Se realiza esta acción para asegurarse que el video está completamente cargado
         webcamRef.current.onloadedmetadata = () => {
           console.log("Webcam stream loaded");
           setMessage("Webcam stream loaded");
-          // Additional actions or event handling code here
+
           initializeModel()
         };
       } catch (error) {
@@ -255,14 +400,17 @@ export default function WebcamRecord() {
         cameraRef.current.stop();
       }
 
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
   // This line and comment ensure that the camera load once at the beginning
   // eslint-disable-next-line
   }, []);
 
+  ///////////////////////////////
+  // html render
+  ///////////
   return (
     <div className="BusquedaSeña__webcam-container">
       <div className="BusquedaSeña__contenedor-video">
@@ -272,6 +420,14 @@ export default function WebcamRecord() {
         {showSquares && <div className="BusquedaSeña__cuadrado_3"></div>}
       </div>
       <div className="BusquedaSeña__message">{messageRef.current}</div>
+     
+      {results.length !== 0 &&  <div className="BusquedaSeña__results">
+        <div className="BusquedaSeña__resultsTitle">Resultados</div>
+        {results.map((word, index) => (
+          <div className="BusquedaSeña__resultsWord" key={index}>{word}</div>
+        ))}
+      </div>}
+
      </div>
   );
 }

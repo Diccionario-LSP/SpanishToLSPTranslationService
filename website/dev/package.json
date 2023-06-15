@@ -7,6 +7,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/holistic": "^0.5.1675471629",
+    "aws-sdk": "^2.1397.0",
     "axios": "^1.4.0",
     "localforage": "^1.10.0",
     "react": "^18.2.0",

@@ -101,3 +101,27 @@
   height: 33%;
   border: 2px solid red;
 }
+
+.BusquedaSeña__results{
+  border-top: 1px solid var(--secondary);
+  margin: 10px auto;
+  width: 50%;
+
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  margin-top: 1vw;
+  margin-bottom: 2vw;
+}
+
+.BusquedaSeña__resultsTitle{
+  padding-top: 1vw; 
+  color: var(--secondary);
+  font-size: medium;
+  font-weight: bold;
+}
+
+.BusquedaSeña__resultsWord{
+  color: var(--secondary);
+  font-style: italic;
+}
