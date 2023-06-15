@@ -221,6 +221,9 @@ export default function WebcamRecord() {
      * pero puede ser negativo o mayor a uno si el modelo
      * predice que el punto podria estar ligeramente
      * fuera del video
+     * 
+     * Más información del modelo en este repositorio:
+     * https://github.com/google/mediapipe/blob/master/docs/solutions/holistic.md
      */
 
     if(messageRef.current === "Cargando modelos..."){
