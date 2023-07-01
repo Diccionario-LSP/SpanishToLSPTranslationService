@@ -306,7 +306,12 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
   return (
     <Modal open={show} onClose={toggleModal} sx={{ display: "grid", placeItems: "center" }}>
-      <Slide direction="down" in={show} timeout={500}>
+      <Slide
+        direction="down"
+        in={show}
+        timeout={500}
+        sx={{ width: { xs: "auto", md: 500 }, margin: { xs: 1, md: 0 } }}
+      >
         <MKBox
           position="relative"
           width="500px"
@@ -406,7 +411,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                 videoConstraints={{ deviceId: deviceId }}
                 mirrored={mirrorCamera}
                 width={"100%"}
-                style={{ borderRadius: 8, marginBottom: -10 }}
+                style={{ borderRadius: 8, marginBottom: -10, width: "100%" }}
                 onUserMedia={(stream) => onWebcamUserMedia(stream)}
               />
               <canvas

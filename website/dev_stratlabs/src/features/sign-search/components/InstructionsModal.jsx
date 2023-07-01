@@ -45,7 +45,12 @@ const Instructions = forwardRef((props, ref) => {
       onClose={closeModal}
       sx={{ display: "grid", placeItems: "center" }}
     >
-      <Slide direction="down" in={show} timeout={500}>
+      <Slide
+        direction="down"
+        in={show}
+        timeout={500}
+        sx={{ width: { xs: "auto", md: 500 }, margin: { xs: 1, md: 0 } }}
+      >
         <MKBox
           position="relative"
           width="500px"
