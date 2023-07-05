@@ -102,7 +102,7 @@ function TextSearch() {
           mt={1}
           mb={5}
         >
-          Encuentra las señas por palabra clave. Utiliza el buscador para encontrar la seña.
+          Escribe la palabra que desees encontrar en Lengua de Señas Peruana.
         </MKTypography>
         <div>
           <SearchTextField
