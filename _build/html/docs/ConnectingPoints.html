@@ -1,0 +1,685 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ConnectingPoints &#8212; Diccionario LSP al Español</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/ConnectingPoints';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="NEED TO BE UPDATED FOR OUR CASE" href="ModelOverview.html" />
+    <link rel="prev" title="Under Construction" href="preprocessing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="README.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pucp_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/pucp_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="README.html">
+                    Welcome!👋
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="DocumentationOverview.html">Documentation Overview</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sign Language Processing</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Under Construction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">ConnectingPoints</a></li>
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Model</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ModelOverview.html">NEED TO BE UPDATED FOR OUR CASE</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="DeployOverview.html">Under Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowItWorks.html">Under Construction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Spanish to Sign Search</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Deploy_TextSearch.html">Under Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Backend_TextSearch.html">Under Construction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sign to Spanish Search</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Under Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Backend_SignSearch.html">Under Construction</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/JoeNatan30/SpanishToPSLTranslationService" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/JoeNatan30/SpanishToPSLTranslationService/issues/new?title=Issue%20on%20page%20%2Fdocs/ConnectingPoints.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/docs/ConnectingPoints.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ConnectingPoints</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">ConnectingPoints</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-thats-works">Datasets thats works:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-aec-and-pucp-dgi-156-dataset">download AEC and PUCP_DGI_156 dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keypoint-estimators-available">Keypoint estimators available</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-more-info-about-this-model-installation-are-in-keypoint-estimator-models-installation">Note: more info about this model installation are in <strong>Keypoint estimator models installation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-structure">Output structure</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-environment">Prepare the environment</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#keypoint-estimator-models-installation">Keypoint estimator models installation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-it">How to use it</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="connectingpoints">
+<h1>ConnectingPoints<a class="headerlink" href="#connectingpoints" title="Permalink to this heading">#</a></h1>
+<p>Repository used to unify keypoints estimators output into a single format, thus making them comparable and analysable.</p>
+<section id="datasets-thats-works">
+<h2>Datasets thats works:<a class="headerlink" href="#datasets-thats-works" title="Permalink to this heading">#</a></h2>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Datasets</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Download Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AEC</p></td>
+<td><p>“Aprendo En Casa” Peruvian Sign Language (LSP), Videos are taken from datasets/AEC/Videos/SEGMENTED_SIGN</p></td>
+<td><p><a class="reference external" href="https://drive.google.com/uc?id=1WHxKijB8t5JLljM59hAqi5KY0U6d7OzA">drive</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>PUCP_PSL_DGI156</p></td>
+<td><p>“PUCP University - Peruvian Sign Language (LSP) - Dirección de investigación N° 156”, Videos are taken from datasets/PUCP_PSL_DGI156/Videos/cropped</p></td>
+<td><p><a class="reference external" href="https://drive.google.com/uc?id=1WHxKijB8t5JLljM59hAqi5KY0U6d7OzA">drive</a></p></td>
+</tr>
+<tr class="row-even"><td><p>PUCP_PSL_DGI305</p></td>
+<td><p>“PUCP University - Peruvian Sign Language (LSP) - Dirección de investigación N° 305”</p></td>
+<td><p>Not available yet</p></td>
+</tr>
+<tr class="row-odd"><td><p>WLASL (Word Level ASL)</p></td>
+<td><p>“Word-level American Sign Language”. Need to download and follow the WLASL guide</p></td>
+<td><p><a class="reference external" href="https://github.com/dxli94/WLASL">github</a></p></td>
+</tr>
+<tr class="row-even"><td><p>AUTSL (Turkish SL)</p></td>
+<td><p>“The Arkara University Turkish Sign Language”</p></td>
+<td><p><a class="reference external" href="http://cvml.ankara.edu.tr/datasets/">website</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>INCLUDE (Indian SL)</p></td>
+<td><p>“A Large Scale Dataset for Indian Sign Language Recognition”</p></td>
+<td><p><a class="reference external" href="https://zenodo.org/record/4010759">website</a></p></td>
+</tr>
+</tbody>
+</table>
+<p>More information about AEC and PUCP_PSL_DGI156 in <a class="reference external" href="https://github.com/gissemari/PeruvianSignLanguage">PeruSIL</a></p>
+</section>
+<section id="download-aec-and-pucp-dgi-156-dataset">
+<h2>download AEC and PUCP_DGI_156 dataset<a class="headerlink" href="#download-aec-and-pucp-dgi-156-dataset" title="Permalink to this heading">#</a></h2>
+<p>run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">create_folders_and_dataset</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>The other datasets have to be located manually in the “dataset” folder</p>
+</section>
+<hr class="docutils" />
+<section id="keypoint-estimators-available">
+<h2>Keypoint estimators available<a class="headerlink" href="#keypoint-estimators-available" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Mediapipe</strong></p></li>
+<li><p><strong>Openpose</strong></p></li>
+<li><p><strong>Wholepose</strong></p></li>
+</ul>
+</section>
+<section id="note-more-info-about-this-model-installation-are-in-keypoint-estimator-models-installation">
+<h2>Note: more info about this model installation are in <strong>Keypoint estimator models installation</strong><a class="headerlink" href="#note-more-info-about-this-model-installation-are-in-keypoint-estimator-models-installation" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="output-structure">
+<h2>Output structure<a class="headerlink" href="#output-structure" title="Permalink to this heading">#</a></h2>
+<p>There will be one output for each keypoint estimator used and data set (and mixes) chosen
+it is need you to create “output” folder</p>
+<p>the output is an H5 file (.hdf5) with this structure:</p>
+<p>group(“#”) where # is an index</p>
+<p>each group will have:</p>
+<ul class="simple">
+<li><p>[“video_name”] = name of the video (this includes the relative path that starts after the name of the dataset)</p></li>
+<li><p>[“label”] = isolated signs showed in the video</p></li>
+<li><p>[“data”] = an TxCxK structure</p></li>
+</ul>
+<p>video_name example (in AEC dataset): “Videos/SEGMENTED_SIGN/ira_alegria/abuelo_118.mp4”</p>
+<p>where:</p>
+<ul class="simple">
+<li><p>T = timestep of the video</p></li>
+<li><p>C = x and y coords</p></li>
+<li><p>K = keypoints (with this order: “pose”, “face”, “left hand” and “right hand”)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="prepare-the-environment">
+<h1>Prepare the environment<a class="headerlink" href="#prepare-the-environment" title="Permalink to this heading">#</a></h1>
+<p>create a new conda enviroment with python 3.8 (recommended)
+then run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">requirements</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="keypoint-estimator-models-installation">
+<h1>Keypoint estimator models installation<a class="headerlink" href="#keypoint-estimator-models-installation" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Mediapipe</strong></p></li>
+</ul>
+<p>This library is already installed if you did the “prepare the enviroment” section.
+It also be installing by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">mediapipe</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Wholepose</strong></p></li>
+</ul>
+<p>go to keypointEstimators/models/wholepose
+Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">download_model</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>this will download “wholebody_hrnet_w48_384x384” pretrained model of <a class="reference external" href="https://github.com/jin-s13/COCO-WholeBody">Coco-Wholebody github</a>. The link was obtained from (Smile-lab)[<a class="github reference external" href="https://github.com/jackyjsy/CVPR21Chal-SLR">jackyjsy/CVPR21Chal-SLR</a>]</p>
+<ul class="simple">
+<li><p><strong>OpenPose</strong></p></li>
+</ul>
+<p>Go to keypointEstimators/models/</p>
+<p>Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sh</span> <span class="n">openpose_installation</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>This will download the <a class="reference external" href="https://github.com/CMU-Perceptual-Computing-Lab/openpose">openpose repository</a> and then install it with the requiered dependencies to use openpose in python.</p>
+<p>If you have another Nvidia architecture that not correspont with the one in cmake, please modify <strong>cmake parameters</strong></p>
+<p>then add this line at the beginning of the “.bashrc” (linux)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export CUDA_PATH=/usr/local/cuda
+export LD_LIBRARY_PATH=$CUDA_PATH/lib64:$LD_LIBRARY_PATH
+export PYTHONPATH=/usr/local/python/openpose:$PYTHONPATH
+</pre></div>
+</div>
+<p>if you are using miniconda, also add</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;/home/&lt;user&gt;/miniconda3/bin:$PATH&quot;</span>
+</pre></div>
+</div>
+<p>in case of anaconda, replace “miniconda” with it (check if the version correspond with the number used)</p>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="how-to-use-it">
+<h1>How to use it<a class="headerlink" href="#how-to-use-it" title="Permalink to this heading">#</a></h1>
+<p>Just run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Select the dataset you want to mix (or to process isolated)
+And then, select the keypoint estimator model (only one per run)</p>
+<p>The output will be in “output” folder.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="preprocessing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Under Construction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ModelOverview.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">NEED TO BE UPDATED FOR OUR CASE</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">ConnectingPoints</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-thats-works">Datasets thats works:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-aec-and-pucp-dgi-156-dataset">download AEC and PUCP_DGI_156 dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keypoint-estimators-available">Keypoint estimators available</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-more-info-about-this-model-installation-are-in-keypoint-estimator-models-installation">Note: more info about this model installation are in <strong>Keypoint estimator models installation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-structure">Output structure</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-environment">Prepare the environment</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#keypoint-estimator-models-installation">Keypoint estimator models installation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-it">How to use it</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Dictionary LSP to Spanish Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>Powered by <a href="https://jupyterbook.org/">Jupyter Book</a>.</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
