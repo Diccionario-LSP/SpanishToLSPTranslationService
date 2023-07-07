@@ -116,7 +116,14 @@ const TextSearchModal = forwardRef((props, ref) => {
             ) : (
               <MKBox sx={{ width: "100%", overflow: "hidden", mt: "4px", height: 4 }}></MKBox>
             )}
-
+            {message && (
+              <Typography
+                variant="h5"
+                style={{ textAlign: "center", paddingTop: 5, paddingBottom: 5 }}
+              >
+                {message}
+              </Typography>
+            )}
             {results &&
               results.map((result) => (
                 <>
