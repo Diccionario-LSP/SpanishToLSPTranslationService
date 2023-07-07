@@ -7,7 +7,8 @@ export const useTextSearchService = () => {
         return await API.get('', { params: { word: query } })
             .then(r => {
 
-                return r.data.map(item => {
+                var words = [];
+                var result = r.data.map(item => {
                     /*
                         { 
                             "sign_gloss_var": "ABRIR",
@@ -19,8 +20,11 @@ export const useTextSearchService = () => {
                         }
                     */
 
-                    debugger;
-                    var word = item.sign_gloss_var.toLowerCase();
+
+
+                    //var word = item.sign_gloss_var.toLowerCase();
+                    var word = item.webname.toLowerCase();
+                    words.push(word);
 
                     if (word.length > 0)
                         word = word[0].toUpperCase() + word.substring(1).replaceAll('-', ' ');
@@ -35,6 +39,8 @@ export const useTextSearchService = () => {
                         phraseVideoUrl: API.GetPhraseUrl(item.urlSentence)
                     }
                 })
+                console.log(words);
+                return result;
             });
     };
 

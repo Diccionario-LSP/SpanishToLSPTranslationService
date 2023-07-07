@@ -35,6 +35,8 @@ import { usePersistentConfig } from "hooks/usePersistentConfig";
 import { RECORDING } from "constants";
 import { leftHandTemplate, rightHandTemplate, faceTemplate } from "utils/landmark-helper";
 
+import InstructionsModal from "./InstructionsModal";
+
 const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const { showRecordingPlayStopButtons, storedDeviceId, setStoredDeviceId } = usePersistentConfig();
 
@@ -44,6 +46,8 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const [devices, setDevices] = useState([]);
   const [show, setShow] = useState(false);
   const toggleModal = () => setShow(!show);
+
+  const instructionsModalRef = useRef(null);
 
   const {
     webcamRef,
@@ -305,140 +309,130 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   }, [show]);
 
   return (
-    <Modal open={show} onClose={toggleModal} sx={{ display: "grid", placeItems: "center" }}>
-      <Slide
-        direction="down"
-        in={show}
-        timeout={500}
-        sx={{ width: { xs: "auto", md: 500 }, margin: { xs: 1, md: 0 } }}
-      >
-        <MKBox
-          position="relative"
-          width="500px"
-          display="flex"
-          flexDirection="column"
-          borderRadius="xl"
-          bgColor="white"
-          shadow="xl"
+    <>
+      <InstructionsModal ref={instructionsModalRef}></InstructionsModal>
+
+      <Modal open={show} onClose={toggleModal} sx={{ display: "grid", placeItems: "center" }}>
+        <Slide
+          direction="down"
+          in={show}
+          timeout={500}
+          sx={{ width: { xs: "auto", md: 500 }, margin: { xs: 1, md: 0 } }}
         >
-          <MKBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
-            <MKTypography variant="h5">Grabar seña</MKTypography>
-            <MKBox display="flex" alignItems="center" justifyContent="space-between">
-              {inCountdown.current && (
-                <RadioButtonCheckedIcon
-                  fontSize="medium"
-                  className="countdown-pulse"
-                  sx={{ mr: 3 }}
-                />
-              )}
+          <MKBox
+            position="relative"
+            width="500px"
+            display="flex"
+            flexDirection="column"
+            borderRadius="xl"
+            bgColor="white"
+            shadow="xl"
+          >
+            <MKBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
+              <MKTypography variant="h5">Grabar seña</MKTypography>
+              <MKBox display="flex" alignItems="center" justifyContent="space-between">
+                {inCountdown.current && (
+                  <RadioButtonCheckedIcon
+                    fontSize="medium"
+                    className="countdown-pulse"
+                    sx={{ mr: 3 }}
+                  />
+                )}
 
-              {isRecording.current && (
-                <RadioButtonCheckedIcon
-                  fontSize="medium"
-                  className="recording-pulse"
-                  sx={{ mr: 3, color: "#e7464c" }}
-                />
-              )}
+                {isRecording.current && (
+                  <RadioButtonCheckedIcon
+                    fontSize="medium"
+                    className="recording-pulse"
+                    sx={{ mr: 3, color: "#e7464c" }}
+                  />
+                )}
 
-              <Tooltip title="Iniciar grabación">
-                <SlowMotionVideoIcon
-                  fontSize="medium"
-                  sx={{ cursor: "pointer", mr: 3 }}
-                  onClick={() => startCountdown()}
-                />
-              </Tooltip>
+                <Tooltip title="Iniciar grabación">
+                  <SlowMotionVideoIcon
+                    fontSize="medium"
+                    sx={{ cursor: "pointer", mr: 3 }}
+                    onClick={() => startCountdown()}
+                  />
+                </Tooltip>
 
-              {showRecordingPlayStopButtons && (
-                <PlayArrowIcon
-                  fontSize="medium"
-                  sx={{ cursor: "pointer", mr: 3 }}
-                  onClick={() => startRecording()}
-                />
-              )}
-              {showRecordingPlayStopButtons && (
-                <StopIcon
-                  fontSize="medium"
-                  sx={{ cursor: "pointer", mr: 3 }}
-                  onClick={() => endRecording()}
-                />
-              )}
-              <Tooltip title="Invertir cámara">
-                <SwitchVideoIcon
-                  fontSize="medium"
-                  sx={{ cursor: "pointer", mr: 3 }}
-                  onClick={() => setMirrorCamera(!mirrorCamera)}
-                />
-              </Tooltip>
-              {devices && devices.length > 0 && (
-                <>
-                  <Tooltip title="Cambiar cámara">
-                    <CameraswitchIcon
-                      fontSize="medium"
-                      sx={{ cursor: "pointer", mr: 3 }}
-                      onClick={showCameraList}
-                    />
-                  </Tooltip>
-                  <Menu
-                    id="lock-menu"
-                    anchorEl={selectCameraEl}
-                    open={selectCameraEl != null}
-                    onClose={() => closeCameraList()}
-                    MenuListProps={{
-                      "aria-labelledby": "lock-button",
-                      role: "listbox",
-                    }}
-                  >
-                    {devices.map((device, index) => (
-                      <MenuItem
-                        onClick={() => closeCameraList(device.deviceId)}
-                        key={device.deviceId}
-                      >
-                        {device.label}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              )}
-              <CloseIcon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModal} />
+                {showRecordingPlayStopButtons && (
+                  <PlayArrowIcon
+                    fontSize="medium"
+                    sx={{ cursor: "pointer", mr: 3 }}
+                    onClick={() => startRecording()}
+                  />
+                )}
+                {showRecordingPlayStopButtons && (
+                  <StopIcon
+                    fontSize="medium"
+                    sx={{ cursor: "pointer", mr: 3 }}
+                    onClick={() => endRecording()}
+                  />
+                )}
+                <Tooltip title="Invertir cámara">
+                  <SwitchVideoIcon
+                    fontSize="medium"
+                    sx={{ cursor: "pointer", mr: 3 }}
+                    onClick={() => setMirrorCamera(!mirrorCamera)}
+                  />
+                </Tooltip>
+                {devices && devices.length > 0 && (
+                  <>
+                    <Tooltip title="Cambiar cámara">
+                      <CameraswitchIcon
+                        fontSize="medium"
+                        sx={{ cursor: "pointer", mr: 3 }}
+                        onClick={showCameraList}
+                      />
+                    </Tooltip>
+                    <Menu
+                      id="lock-menu"
+                      anchorEl={selectCameraEl}
+                      open={selectCameraEl != null}
+                      onClose={() => closeCameraList()}
+                      MenuListProps={{
+                        "aria-labelledby": "lock-button",
+                        role: "listbox",
+                      }}
+                    >
+                      {devices.map((device, index) => (
+                        <MenuItem
+                          onClick={() => closeCameraList(device.deviceId)}
+                          key={device.deviceId}
+                        >
+                          {device.label}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </>
+                )}
+                <CloseIcon fontSize="medium" sx={{ cursor: "pointer" }} onClick={toggleModal} />
+              </MKBox>
             </MKBox>
-          </MKBox>
-          <Divider sx={{ my: 0 }} />
-          <MKBox p={2}>
-            <div style={{ position: "relative" }}>
-              <Webcam
-                ref={webcamRef}
-                audio={false}
-                videoConstraints={{ deviceId: deviceId }}
-                mirrored={mirrorCamera}
-                width={"100%"}
-                style={{ borderRadius: 8, marginBottom: -10, width: "100%" }}
-                onUserMedia={(stream) => onWebcamUserMedia(stream)}
-              />
-              <canvas
-                id="canvas"
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  width: "100%",
-                  top: 0,
-                  height: "100%",
-                  transform: mirrorCamera ? "scaleX(-1)" : "none",
-                }}
-              ></canvas>
-              {showCountdown && (
-                <div
+            <Divider sx={{ my: 0 }} />
+            <MKBox p={2}>
+              <div style={{ position: "relative" }}>
+                <Webcam
+                  ref={webcamRef}
+                  audio={false}
+                  videoConstraints={{ deviceId: deviceId }}
+                  mirrored={mirrorCamera}
+                  width={"100%"}
+                  style={{ borderRadius: 8, marginBottom: -10, width: "100%" }}
+                  onUserMedia={(stream) => onWebcamUserMedia(stream)}
+                />
+                <canvas
+                  id="canvas"
                   style={{
                     position: "absolute",
                     left: 0,
                     width: "100%",
                     top: 0,
                     height: "100%",
-                    display: "flex",
-                    alignContent: "center",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
+                    transform: mirrorCamera ? "scaleX(-1)" : "none",
                   }}
-                >
+                ></canvas>
+                {showCountdown && (
                   <div
                     style={{
                       position: "absolute",
@@ -446,41 +440,63 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                       width: "100%",
                       top: 0,
                       height: "100%",
-                      backgroundColor: "black",
-                      opacity: 0.7,
-                      borderRadius: 8,
+                      display: "flex",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
                     }}
-                  ></div>
-                  <div style={{ zIndex: 100, textAlign: "center" }}>
-                    <div style={{ color: "#ffffffaa" }}>Grabando en</div>
-                    <MKTypography variant="h1" color="white" style={{ fontSize: 70 }}>
-                      {countdownLabel}
-                    </MKTypography>
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        width: "100%",
+                        top: 0,
+                        height: "100%",
+                        backgroundColor: "black",
+                        opacity: 0.7,
+                        borderRadius: 8,
+                      }}
+                    ></div>
+                    <div style={{ zIndex: 100, textAlign: "center" }}>
+                      <div style={{ color: "#ffffffaa" }}>Grabando en</div>
+                      <MKTypography variant="h1" color="white" style={{ fontSize: 70 }}>
+                        {countdownLabel}
+                      </MKTypography>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </MKBox>
+                )}
+              </div>
+            </MKBox>
 
-          <Divider sx={{ my: 0 }} />
-          {!show ? (
-            <LinearProgress
-              variant="indeterminate"
-              value={true}
-              sx={{ width: "100%", overflow: "hidden", height: 4 }}
-            ></LinearProgress>
-          ) : (
-            <MKBox sx={{ width: "100%", overflow: "hidden", height: 4 }}></MKBox>
-          )}
-          <MKBox display="flex" justifyContent="space-between" p={1.5}>
-            <div></div>
-            <MKButton variant="gradient" color="info" onClick={toggleModal}>
-              Cerrar
-            </MKButton>
+            <Divider sx={{ my: 0 }} />
+            {!show ? (
+              <LinearProgress
+                variant="indeterminate"
+                value={true}
+                sx={{ width: "100%", overflow: "hidden", height: 4 }}
+              ></LinearProgress>
+            ) : (
+              <MKBox sx={{ width: "100%", overflow: "hidden", height: 4 }}></MKBox>
+            )}
+            <MKBox display="flex" justifyContent="space-between" p={1.5}>
+              <MKButton
+                variant="gradient"
+                color="info"
+                onClick={() => instructionsModalRef.current.showModal(true, true)}
+              >
+                Instrucciones
+              </MKButton>
+
+              <div></div>
+              <MKButton variant="gradient" color="info" onClick={toggleModal}>
+                Cerrar
+              </MKButton>
+            </MKBox>
           </MKBox>
-        </MKBox>
-      </Slide>
-    </Modal>
+        </Slide>
+      </Modal>
+    </>
   );
 });
 

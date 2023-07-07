@@ -20,30 +20,36 @@ export const useSignSearchService = () => {
         const params = {
             FunctionName: AWS_CONFIG.LAMBDA_SAGEMAKER_INOKER,
             Payload: JSON.stringify({
-                keypoints: keypoints
+                //keypoints: keypoints
+                default: keypoints
             })
         };
 
         return new Promise((resolve, reject) => {
             lambda.invoke(params, (err, data) => {
+
+
+                debugger;
+
                 if (err) {
                     console.log(err, err.stack);
-                    reject(err);
+                    return reject(err);
                 }
-                else {
 
-                    const raw = JSON.parse(data.Payload);
-                    if (!raw) return [];
+                const raw = JSON.parse(data.Payload);
 
-                    const result = raw.filter(r => !!r.gloss)
-                        .map(r => {
-                            return {
-                                word: r.gloss
-                            }
-                        })
+                if (!raw) return [];
+                if (raw.errorMessage) return reject(err);
 
-                    resolve(result);
-                }
+                const result = raw.filter(r => !!r.gloss)
+                    .map(r => {
+                        return {
+                            word: r.gloss
+                        }
+                    })
+
+                resolve(result);
+
             });
         });
     };

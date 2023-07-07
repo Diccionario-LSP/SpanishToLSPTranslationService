@@ -13,6 +13,8 @@ import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import MKTypography from "components/MKTypography";
 
+import SignVideo from "components/UI/SignVideo";
+
 import { usePersistentConfig } from "hooks/usePersistentConfig";
 
 const Instructions = forwardRef((props, ref) => {
@@ -65,20 +67,31 @@ const Instructions = forwardRef((props, ref) => {
             <CloseIcon fontSize="medium" sx={{ cursor: "pointer" }} onClick={closeModal} />
           </MKBox>
           <Divider sx={{ my: 0 }} />
-          <MKBox p={2}>
-            <MKTypography variant="body2" color="secondary" fontWeight="regular">
-              Al dar clic en el botón INICIAR la cámara de tu computadora se prenderá y se mostrarán
-              3 recuadros para que ubiques tu rostro y las palmas de tus manos.
-              <br />
-              <br />
-              Cuando te hayas ubicado correctamente, se mostrará un contador (3,2,1) y podrás
-              realizar la seña a buscar en <u>dos segundos</u>.
-              <br />
-              <br />
-              Recomendamos ubicarse aproximadamente a 80cm de la cámara.
-            </MKTypography>
+          <MKBox
+            style={{
+              overflowY: "auto",
+              maxHeight: "calc(100vh - 150px)",
+            }}
+          >
+            <MKBox p={2}>
+              <MKTypography variant="body2" color="secondary" fontWeight="regular">
+                Al dar clic en el botón INICIAR la cámara de tu computadora se prenderá y se
+                mostrarán 3 recuadros para que ubiques tu rostro y las palmas de tus manos.
+                <br />
+                <br />
+                Cuando te hayas ubicado correctamente, se mostrará un contador (3,2,1) y podrás
+                realizar la seña a buscar en <u>dos segundos</u>.
+                <br />
+                <br />
+                Recomendamos ubicarse aproximadamente a 80cm de la cámara.
+              </MKTypography>
+            </MKBox>
+            <Divider sx={{ my: 0 }} />
+            <SignVideo
+              source={"https://isolatedsigns.s3.amazonaws.com/ABRIR-PUERTA.mp4"}
+              style={{}}
+            ></SignVideo>
           </MKBox>
-          <Divider sx={{ my: 0 }} />
           <MKBox display="flex" justifyContent="space-between" p={1.5}>
             {hideDontShowAgain ? (
               <div></div>
