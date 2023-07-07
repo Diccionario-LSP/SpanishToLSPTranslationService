@@ -1,0 +1,25 @@
+format: jb-book
+root: docs/README
+parts:
+- caption: Getting Started
+  chapters:
+  - file: docs/DocumentationOverview
+- caption: Sign Language Processing
+  chapters:
+  - file: docs/preprocessing
+  - file: docs/ConnectingPoints
+- caption: Training Model
+  chapters:
+  - file: docs/ModelOverview
+- caption: Deployment
+  chapters:
+  - file: docs/DeployOverview
+  - file: docs/HowItWorks
+- caption: Spanish to Sign Search
+  chapters:
+  - file: docs/Deploy_TextSearch
+  - file: docs/Backend_TextSearch
+- caption: Sign to Spanish Search
+  chapters:
+  - file: docs/Inference
+  - file: docs/Backend_SignSearch
