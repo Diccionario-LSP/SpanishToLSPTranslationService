@@ -15,6 +15,7 @@ SignVideo.propTypes = {
 
 function SignVideo({ source, style, ...rest }) {
   const videoRef = useRef(null);
+  const [available, setAvailable] = useState(true);
   const [hover, setHover] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -29,13 +30,18 @@ function SignVideo({ source, style, ...rest }) {
     }
   }, [videoRef]);
 
+  const play = () => {
+    if (available) videoRef.current.play();
+  };
+
   return (
     <>
-      <div style={{ position: "relative", lineHeight: 1 }}>
+      <div style={{ position: "relative", lineHeight: "1rem", aspectRatio: "16 / 9" }}>
         <video
           ref={videoRef}
           onMouseEnter={(e) => setHover(true)}
           onMouseLeave={(e) => setHover(false)}
+          onError={(e) => setAvailable(false)}
           style={{ width: "100%", ...style }}
           src={source}
           loop={true}
@@ -50,26 +56,33 @@ function SignVideo({ source, style, ...rest }) {
               width: "100%",
               top: 0,
               height: "100%",
+
               display: "flex",
               alignContent: "center",
               justifyContent: "center",
               flexWrap: "wrap",
-              cursor: "pointer",
+              cursor: available ? "pointer" : "default",
             }}
             onMouseEnter={(e) => setHover(true)}
             onMouseLeave={(e) => setHover(false)}
-            onClick={() => videoRef.current.play()}
+            onClick={() => play()}
           >
-            <div
-              style={{
-                zIndex: 100,
-                textAlign: "center",
-                backgroundColor: "#000000a0",
-                borderRadius: "50%",
-              }}
-            >
-              <PlayArrowIcon fontSize="large" color="light"></PlayArrowIcon>
-            </div>
+            {available ? (
+              <div
+                style={{
+                  zIndex: 100,
+                  textAlign: "center",
+                  backgroundColor: "#000000a0",
+                  borderRadius: "50%",
+                }}
+              >
+                <PlayArrowIcon fontSize="large" color="light"></PlayArrowIcon>
+              </div>
+            ) : (
+              <MKTypography variant="body2" fontSize="small">
+                Video no disponible
+              </MKTypography>
+            )}
           </div>
         )}
       </div>

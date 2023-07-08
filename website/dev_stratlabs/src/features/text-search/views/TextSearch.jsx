@@ -287,7 +287,7 @@ function TextSearch() {
                       </Grid>
                       <Grid item xs={6} md={6} lg={6}>
                         <SignVideo
-                          source={result.wordVideoUrl}
+                          source={result.phraseVideoUrl}
                           style={{ borderRadius: "8px" }}
                         ></SignVideo>
                         <Typography variant="body2" color="text.secondary">
@@ -322,7 +322,7 @@ function TextSearch() {
                             {result.phrase}
                           </Typography>
                           <SignVideo
-                            source={result.wordVideoUrl}
+                            source={result.phraseVideoUrl}
                             style={{ borderRadius: "8px" }}
                           ></SignVideo>
                         </CardContent>
