@@ -75,15 +75,16 @@ const Instructions = forwardRef((props, ref) => {
           >
             <MKBox p={2}>
               <MKTypography variant="body2" color="secondary" fontWeight="regular">
-                Al dar clic en el botón INICIAR la cámara de tu computadora se prenderá y se
-                mostrarán 3 recuadros para que ubiques tu rostro y las palmas de tus manos.
+                Al dar clic en el botón GRABAR SEÑA la cámara de tu computadora se encenderá y se
+                mostrará una guía de la posición de inicio.
                 <br />
                 <br />
                 Cuando te hayas ubicado correctamente, se mostrará un contador (3,2,1) y podrás
                 realizar la seña a buscar en <u>dos segundos</u>.
                 <br />
                 <br />
-                Recomendamos ubicarse aproximadamente a 80cm de la cámara.
+                Recomendamos ubicarse aproximadamente a 80cm de la cámara de tal forma que el torso,
+                manos y cabeza estén visibles y en posición correcta.
               </MKTypography>
             </MKBox>
             <Divider sx={{ my: 0 }} />

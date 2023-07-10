@@ -11,7 +11,7 @@ export default {
   company: { href: "https://www.pucp.edu.pe/", name: "PUCP" },
   links: [
     {
-      name: "Búsqueda en Español",
+      name: "Búsqueda en Castellano",
       route: "/search-by-text",
     },
     {

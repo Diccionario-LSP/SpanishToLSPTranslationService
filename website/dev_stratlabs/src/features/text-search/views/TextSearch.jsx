@@ -135,7 +135,7 @@ function TextSearch() {
             },
           })}
         >
-          Búsqueda en Español
+          Búsqueda en Castellano
         </MKTypography>
         <MKTypography
           variant="body1"
