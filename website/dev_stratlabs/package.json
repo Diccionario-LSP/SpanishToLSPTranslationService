@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "author": "PUCP",
-  "description": "Diccionario de LSP al Castellano",
+  "description": "Diccionario de LSP al Español",
   "dependencies": {
     "@emotion/cache": "11.10.7",
     "@emotion/react": "11.10.6",

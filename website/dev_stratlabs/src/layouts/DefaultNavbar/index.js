@@ -474,7 +474,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
             mr={center ? "auto" : 0}
           >
             <MKTypography variant="body1" fontWeight="bold" color={light ? "white" : "dark"}>
-              Diccionario LSP al Castellano
+              Diccionario LSP al Español
             </MKTypography>
           </MKBox>
           <MKBox

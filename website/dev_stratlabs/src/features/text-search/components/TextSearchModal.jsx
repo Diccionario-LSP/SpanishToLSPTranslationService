@@ -37,13 +37,13 @@ const TextSearchModal = forwardRef((props, ref) => {
 
   const onSearch = () => {
     if (!query) {
-      setMessage("Ingrese una palabra para realizar la búsqueda");
+      setMessage("");
       return;
     }
 
     setSearching(true);
     textSearchService
-      .search(query)
+      .search(query, "AiResultSearch")
       .then((r) => {
         if (r && r.length == 0) {
           setMessage("No se encontraron resultados");
@@ -139,9 +139,6 @@ const TextSearchModal = forwardRef((props, ref) => {
                         source={result.wordVideoUrl}
                         style={{ borderRadius: "8px" }}
                       ></SignVideo>
-                      <Typography variant="body2" color="text.secondary">
-                        {result.word}
-                      </Typography>
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
                       <SignVideo

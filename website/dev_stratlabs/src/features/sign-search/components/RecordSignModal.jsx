@@ -121,24 +121,30 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
     canvasCtx.save();
     canvasCtx.globalCompositeOperation = "source-over";
 
+    /*
+      FACEMESH_TESSELATION
+      FACE_GEOMETRY,
+      FACEMESH_FACE_OVAL,
+      FACEMESH_CONTOURS,
+*/
+
     //FACEMESH
     if (!results.inStartPosition.face) {
-      const faceColor = "#ffffff60";
-      drawConnectors(canvasCtx, faceTemplate, FACEMESH_FACE_OVAL, {
-        color: faceColor,
+      drawConnectors(canvasCtx, faceTemplate, FACEMESH_CONTOURS, {
+        color: "#ffffff80",
         lineWidth: 1,
       });
     }
 
     //LEFT HAND
     if (!results.inStartPosition.leftHand) {
-      const leftHandColor = "#ffffff60";
       drawConnectors(canvasCtx, leftHandTemplate, HAND_CONNECTIONS, {
-        color: leftHandColor,
+        color: "#ffffff80",
         lineWidth: 2,
       });
       drawLandmarks(canvasCtx, leftHandTemplate, {
         radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+        color: "#ffffff40",
         fillColor: "transparent",
         lineWidth: 1,
       });
@@ -146,13 +152,13 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
     //RIGHT HAND
     if (!results.inStartPosition.rightHand) {
-      const rightHandColor = "#ffffff60";
       drawConnectors(canvasCtx, rightHandTemplate, HAND_CONNECTIONS, {
-        color: rightHandColor,
+        color: "#ffffff80",
         lineWidth: 2,
       });
       drawLandmarks(canvasCtx, rightHandTemplate, {
         radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+        color: "#ffffff40",
         fillColor: "transparent",
         lineWidth: 1,
       });
@@ -288,6 +294,12 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
     }
   };
 
+  const resetCountdown = () => {
+    if (timer.current) clearTimeout(timer.current);
+    inCountdown.current = false;
+    setShowCountdown(false);
+  };
+
   // #endregion Countdown
 
   const onHolisticResults = (results) => {
@@ -304,7 +316,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   useEffect(() => {
     return () => {
       mediaPipeReset();
-      if (timer.current) clearTimeout(timer.current);
+      resetCountdown();
     };
   }, [show]);
 
@@ -347,13 +359,15 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                   />
                 )}
 
-                <Tooltip title="Iniciar grabación">
-                  <SlowMotionVideoIcon
-                    fontSize="medium"
-                    sx={{ cursor: "pointer", mr: 3 }}
-                    onClick={() => startCountdown()}
-                  />
-                </Tooltip>
+                {showRecordingPlayStopButtons && (
+                  <Tooltip title="Iniciar grabación">
+                    <SlowMotionVideoIcon
+                      fontSize="medium"
+                      sx={{ cursor: "pointer", mr: 3 }}
+                      onClick={() => startCountdown()}
+                    />
+                  </Tooltip>
+                )}
 
                 {showRecordingPlayStopButtons && (
                   <PlayArrowIcon
@@ -369,14 +383,16 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                     onClick={() => endRecording()}
                   />
                 )}
-                <Tooltip title="Invertir cámara">
-                  <SwitchVideoIcon
-                    fontSize="medium"
-                    sx={{ cursor: "pointer", mr: 3 }}
-                    onClick={() => setMirrorCamera(!mirrorCamera)}
-                  />
-                </Tooltip>
-                {devices && devices.length > 0 && (
+                {showRecordingPlayStopButtons && (
+                  <Tooltip title="Invertir cámara">
+                    <SwitchVideoIcon
+                      fontSize="medium"
+                      sx={{ cursor: "pointer", mr: 3 }}
+                      onClick={() => setMirrorCamera(!mirrorCamera)}
+                    />
+                  </Tooltip>
+                )}
+                {showRecordingPlayStopButtons && devices && devices.length > 0 && (
                   <>
                     <Tooltip title="Cambiar cámara">
                       <CameraswitchIcon

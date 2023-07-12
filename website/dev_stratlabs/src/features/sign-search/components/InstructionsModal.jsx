@@ -7,6 +7,7 @@ import { Switch, Modal, Divider, Slide } from "@mui/material";
 
 // @mui icons
 import CloseIcon from "@mui/icons-material/Close";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
@@ -21,6 +22,7 @@ const Instructions = forwardRef((props, ref) => {
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [hideDontShowAgain, setHideDontShowAgain] = useState(false);
   const [show, setShow] = useState(false);
+  const [showStartRecording, setShowStartRecording] = useState(false);
 
   const { setHideRecordingInstructionsOnLoad } = usePersistentConfig();
 
@@ -33,9 +35,15 @@ const Instructions = forwardRef((props, ref) => {
     setShow(false);
   };
 
+  const starRecordingHandler = () => {
+    closeModal();
+    if (props.onStartRecordingHandler) props.onStartRecordingHandler();
+  };
+
   useImperativeHandle(ref, () => ({
-    showModal(visible = true, hideDontShowAgain = false) {
+    showModal(visible = true, hideDontShowAgain = false, showStartRecording = false) {
       setHideDontShowAgain(!!hideDontShowAgain);
+      setShowStartRecording(showStartRecording);
       setShow(visible);
     },
   }));
@@ -76,7 +84,7 @@ const Instructions = forwardRef((props, ref) => {
             <MKBox p={2}>
               <MKTypography variant="body2" color="secondary" fontWeight="regular">
                 Al dar clic en el botón GRABAR SEÑA la cámara de tu computadora se encenderá y se
-                mostrará una guía de la posición de inicio.
+                mostrará una guía para posicionar tu rostro y tus manos.
                 <br />
                 <br />
                 Cuando te hayas ubicado correctamente, se mostrará un contador (3,2,1) y podrás
@@ -112,9 +120,20 @@ const Instructions = forwardRef((props, ref) => {
               </MKBox>
             )}
 
-            <MKButton variant="gradient" color="info" onClick={closeModal}>
-              Cerrar
-            </MKButton>
+            {showStartRecording ? (
+              <MKButton variant="gradient" color="info" onClick={starRecordingHandler}>
+                <RadioButtonCheckedIcon
+                  fontSize="medium"
+                  className="countdown-pulse"
+                  sx={{ mr: 1 }}
+                />
+                Grabar seña
+              </MKButton>
+            ) : (
+              <MKButton variant="gradient" color="info" onClick={closeModal}>
+                Cerrar
+              </MKButton>
+            )}
           </MKBox>
         </MKBox>
       </Slide>
@@ -124,6 +143,7 @@ const Instructions = forwardRef((props, ref) => {
 
 Instructions.propTypes = {
   showModal: PropTypes.bool,
+  onStartRecordingHandler: PropTypes.func,
 };
 
 export default Instructions;

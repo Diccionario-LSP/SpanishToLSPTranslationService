@@ -8,7 +8,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 // eslint-disable-next-line no-unused-vars
 const routes = [
   {
-    name: "Búsqueda en Castellano",
+    name: "Búsqueda en Español",
     icon: <SearchIcon />,
     route: "/search-by-text",
   },

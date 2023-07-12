@@ -58,23 +58,62 @@ export const useHolistic = () => {
         const eye_x = (x2 + x5) / 2;
         const eye_y = (y2 + y5) / 2;
 
-        const inStartPosition = {
+        /*const inStartPosition = {
             leftHand:
-                left_hand_x > 0.6 &&
-                left_hand_x < 1.0 &&
-                left_hand_y > 0.77 &&
-                left_hand_y < 1.0,
+                left_hand_x > 0.560 &&
+                left_hand_x < 0.710 &&
+                left_hand_y > 0.554 &&
+                left_hand_y < 0.821,
             rightHand:
-                right_hand_x <= 0.3 &&
-                right_hand_x > 0.0 &&
-                right_hand_y > 0.77 &&
-                right_hand_y < 1.0,
+                right_hand_x > 0.290 &&
+                right_hand_x < 0.440 &&
+                right_hand_y > 0.554 &&
+                right_hand_y < 0.821,
             face:
-                eye_y < 0.33 &&
-                eye_y > 0.0 &&
-                eye_x < 0.6 &&
-                eye_x > 0.3,
+                eye_x > 0.400 &&
+                eye_x < 0.560 &&
+                eye_y > 0.143 &&
+                eye_y < 0.321,
+            old: {
+                leftHand:
+                    left_hand_x > 0.6 &&
+                    left_hand_x < 1.0 &&
+                    left_hand_y > 0.77 &&
+                    left_hand_y < 1.0,
+                rightHand:
+                    right_hand_x <= 0.3 &&
+                    right_hand_x > 0.0 &&
+                    right_hand_y > 0.77 &&
+                    right_hand_y < 1.0,
+                face:
+                    eye_y < 0.33 &&
+                    eye_y > 0.0 &&
+                    eye_x < 0.6 &&
+                    eye_x > 0.3,
+            },
             all: false
+        }*/
+
+        const inStartPosition = {
+            leftHand: false,
+            rightHand: false,
+            face: false,
+            all: false
+        }
+
+        if (Math.abs(eye_x - 0.480) < 0.080 && Math.abs(eye_y - 0.232) < 0.089) {
+            //console.log('faceTemplate = ' + JSON.stringify(results.faceLandmarks))
+            inStartPosition.face = true;
+        }
+
+        if (Math.abs(left_hand_x - 0.635) < 0.075 && Math.abs(left_hand_y - 0.688) < 0.134) {
+            //console.log('leftHandTemplate = ' + JSON.stringify(results.leftHandLandmarks))
+            inStartPosition.leftHand = true;
+        }
+
+        if (Math.abs(right_hand_x - 0.365) < 0.075 && Math.abs(right_hand_y - 0.688) < 0.134) {
+            //console.log('rightHandTemplate = ' + JSON.stringify(results.rightHandLandmarks))
+            inStartPosition.rightHand = true;
         }
 
         inStartPosition.all = inStartPosition.leftHand && inStartPosition.rightHand && inStartPosition.face;

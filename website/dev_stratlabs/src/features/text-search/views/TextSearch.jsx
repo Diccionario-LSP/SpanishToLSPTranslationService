@@ -77,7 +77,7 @@ function TextSearch() {
 
     setSearching(true);
     textSearchService
-      .search(searchQuery)
+      .search(searchQuery, "wordSearch")
       .then((r) => {
         if (r && r.length == 0) {
           setMessage("No se encontraron resultados");
@@ -135,7 +135,7 @@ function TextSearch() {
             },
           })}
         >
-          Búsqueda en Castellano
+          Búsqueda en Español
         </MKTypography>
         <MKTypography
           variant="body1"
@@ -281,9 +281,6 @@ function TextSearch() {
                           source={result.wordVideoUrl}
                           style={{ borderRadius: "8px" }}
                         ></SignVideo>
-                        <Typography variant="body2" color="text.secondary">
-                          {result.word}
-                        </Typography>
                       </Grid>
                       <Grid item xs={6} md={6} lg={6}>
                         <SignVideo

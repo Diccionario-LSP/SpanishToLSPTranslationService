@@ -1,5 +1,6 @@
+export const DICTIONARY_WORD_LIST = []
 
-export const DICTIONARY_WORD_LIST = [
+export const DICTIONARY_WORD_LIST_REAL = [
     { label: "¿qué-pasa?" },
     { label: "abrazar" },
     { label: "abrir-cajón" },

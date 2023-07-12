@@ -3,8 +3,12 @@ import API from "utils/axios-config";
 
 export const useTextSearchService = () => {
 
-    const search = async (query) => {
-        return await API.get('', { params: { word: query } })
+    const search = async (query, indexType) => {
+
+        if (indexType != 'wordSearch' && indexType != 'AiResultSearch')
+            throw new Error('indexType no reconocido.')
+
+        return await API.get('', { params: { word: query, indexType: 'wordSearch' } })
             .then(r => {
 
                 var words = [];
@@ -19,8 +23,6 @@ export const useTextSearchService = () => {
                             "url": "s3://isolatedsigns/ABRIR.mp4"
                         }
                     */
-
-
 
                     //var word = item.sign_gloss_var.toLowerCase();
                     var word = item.webname.toLowerCase();
@@ -43,6 +45,7 @@ export const useTextSearchService = () => {
                 return result;
             });
     };
+
 
     return {
         search,

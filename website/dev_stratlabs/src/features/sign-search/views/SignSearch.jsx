@@ -101,13 +101,18 @@ function SignSearch() {
 
   useEffect(() => {
     if (!hideRecordingInstructionsOnLoad) {
-      instructionsModalRef.current.showModal(true, false);
+      instructionsModalRef.current.showModal(true, false, true);
     }
   }, [instructionsModalRef]);
 
   return (
     <>
-      <InstructionsModal ref={instructionsModalRef}></InstructionsModal>
+      <InstructionsModal
+        ref={instructionsModalRef}
+        onStartRecordingHandler={() => {
+          recordSignModalRef.current.showModal(true);
+        }}
+      ></InstructionsModal>
       <RecordSignModal ref={recordSignModalRef} onRecorded={onRecorded}></RecordSignModal>
       <TextSearchModal ref={textSearchModalRef}></TextSearchModal>
 
@@ -199,16 +204,15 @@ function SignSearch() {
                         <ul>
                           {r.signs.map((s) => (
                             <li key={s.word}>
-                              <Link
-                                href="/"
-                                underline="hover"
+                              <a
+                                href={"#" + s.word}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   textSearchModalRef.current.showModal(true, s.word);
                                 }}
                               >
                                 {s.word}
-                              </Link>
+                              </a>
                             </li>
                           ))}
                         </ul>
