@@ -8,7 +8,7 @@ export const useTextSearchService = () => {
         if (indexType != 'wordSearch' && indexType != 'AiResultSearch')
             throw new Error('indexType no reconocido.')
 
-        return await API.get('', { params: { word: query, indexType: 'wordSearch' } })
+        return await API.get('', { params: { word: query, indexType: indexType } })
             .then(r => {
 
                 var words = [];
