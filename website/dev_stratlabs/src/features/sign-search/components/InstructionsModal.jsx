@@ -97,7 +97,7 @@ const Instructions = forwardRef((props, ref) => {
             </MKBox>
             <Divider sx={{ my: 0 }} />
             <SignVideo
-              source={"https://isolatedsigns.s3.amazonaws.com/ABRIR-PUERTA.mp4"}
+              source={"https://isolatedsigns.s3.amazonaws.com/INSTRUCCIONES-LSP.mp4"}
               style={{}}
             ></SignVideo>
           </MKBox>
