@@ -54,7 +54,7 @@ export const useSignSearchService = () => {
                         }
                     }
                 }
-                const result = raw.filter(r => !!r.gloss);
+                const result = raw.filter(r => !!r.word);
                 resolve(result);
             });
         });
