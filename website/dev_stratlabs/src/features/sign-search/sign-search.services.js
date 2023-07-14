@@ -3,7 +3,11 @@ import API from "utils/axios-config";
 import AWS from "utils/aws-config";
 import { AWS_CONFIG } from 'constants'
 
+import { useTextSearchService } from "features/text-search/text-search.services";
+
 export const useSignSearchService = () => {
+
+    const textSearchService = useTextSearchService();
 
     const uploadLandmarks = async (landmarks) => {
         const lambda = new AWS.Lambda();
@@ -26,10 +30,7 @@ export const useSignSearchService = () => {
         };
 
         return new Promise((resolve, reject) => {
-            lambda.invoke(params, (err, data) => {
-
-
-                debugger;
+            lambda.invoke(params, async (err, data) => {
 
                 if (err) {
                     console.log(err, err.stack);
@@ -41,15 +42,20 @@ export const useSignSearchService = () => {
                 if (!raw) return [];
                 if (raw.errorMessage) return reject(err);
 
-                const result = raw.filter(r => !!r.gloss)
-                    .map(r => {
-                        return {
-                            word: r.gloss
+                for (var i = 0; i < raw.length; i++) {
+                    var r = raw[i];
+                    if (r.gloss) {
+                        const searchResult = await textSearchService.search(r.gloss, 'AiResultSearch')
+
+                        r.results = []
+                        if (searchResult && searchResult.length > 0) {
+                            r.results = [searchResult[0]];
+                            r.word = r.results[0].word
                         }
-                    })
-
+                    }
+                }
+                const result = raw.filter(r => !!r.gloss);
                 resolve(result);
-
             });
         });
     };

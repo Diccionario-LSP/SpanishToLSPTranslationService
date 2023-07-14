@@ -42,6 +42,7 @@ function SignVideo({ source, style, ...rest }) {
           onMouseEnter={(e) => setHover(true)}
           onMouseLeave={(e) => setHover(false)}
           onError={(e) => setAvailable(false)}
+          onLoadedMetadata={(e) => setAvailable(true)}
           style={{ width: "100%", ...style }}
           src={source}
           loop={true}
