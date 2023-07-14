@@ -35,7 +35,7 @@ pytorch_model = PyTorchModel(
     py_version="py38",
     #source_dir='./code',
     #source_dir="s3://sagemaker-us-east-1-psl/sourcedir.tar.gz",
-    entry_point='inference.py')
+    entry_point='inference_keypoints.py')
 
 '''
 If all was ok, you will see a charging bar that means the inference is being created. 
@@ -45,9 +45,9 @@ You can check it in Sagemaker endpoint dashboard
 print("deploying the model in sagemaker endpoint...")
 predictor = pytorch_model.deploy(
     instance_type= 'ml.g4dn.xlarge',#'ml.c6g.large',
-    endpoint_name='spoter-Sagemaker-Endpoint-serverless-50c-69a-top5',
+    endpoint_name='spoter-Sagemaker-Endpoint-serverless-50c-69a-top5-keypoints',
     serverless_inference_config=ServerlessInferenceConfig(
-        max_concurrency=8,
+        max_concurrency=2,
         memory_size_in_mb=1024*3),
     initial_instance_count=1)
 

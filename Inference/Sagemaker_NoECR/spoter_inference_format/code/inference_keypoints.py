@@ -1,15 +1,10 @@
-import mediapipe as mp
 import pandas as pd
 import numpy as np
-import cv2 
 import torch
 import json
 import sys
 import os
-import boto3
 import logging
-
-from collections import OrderedDict
 
 sys.path.append('./code')
 from spoter.spoter_model import SPOTER
@@ -94,8 +89,8 @@ def configure_model(config_file, use_wandb):
 def keypoint_filter(keypoints):
 
     #POSE
-    if keypoints.pose_landmarks:
-        pose = [ [point.x, point.y] for point in keypoints.pose_landmarks.landmark]
+    if keypoints['pose_landmarks']:
+        pose = [ [point['x'], point['y']] for point in keypoints['pose_landmarks']]
     else:
         pose = [ [0.0, 0.0] for point in range(0, 33)]
     pose = np.asarray(pose)
@@ -103,24 +98,24 @@ def keypoint_filter(keypoints):
     # HANDS
 
     # Left hand
-    if(keypoints.left_hand_landmarks):
-        left_hand = [ [point.x, point.y] for point in keypoints.left_hand_landmarks.landmark]
+    if(keypoints['left_hand_landmarks']):
+        left_hand = [ [point['x'], point['y']] for point in keypoints['left_hand_landmarks']]
     else:
         left_hand = [ [pose[15][0], pose[15][1]] for point in range(0, 21)]
     left_hand = np.asarray(left_hand)
 
     # Right hand
-    if(keypoints.right_hand_landmarks):
-        right_hand = [ [point.x, point.y] for point in keypoints.right_hand_landmarks.landmark]
+    if(keypoints['right_hand_landmarks']):
+        right_hand = [ [point['x'], point['y']] for point in keypoints['right_hand_landmarks']]
     else:
         right_hand = [[pose[16][0], pose[16][1]] for point in range(0, 21)]
     right_hand = np.asarray(right_hand)
 
     # Face mesh
 
-    if(keypoints.face_landmarks):
+    if(keypoints['face_landmarks']):
 
-        face = [ [point.x, point.y] for point in keypoints.face_landmarks.landmark]
+        face = [ [point['x'], point['y']] for point in keypoints['face_landmarks']]
 
     else:
         face = [[0.0, 0.0] for point in range(0, 468)]
@@ -398,6 +393,7 @@ def input_fn(request_body, request_content_type):
     if request_content_type == 'application/json':
         data_json = json.loads(request_body)
         data = data_json["keypoints_list"]
+        logger.warning(f'initialize input_fn - {data}')
 
         #return torch.load(BytesIO(request_body))
     else:
@@ -472,7 +468,7 @@ def output_fn(prediction, content_type):
         response = json.dumps(json_output)
 
     else:
-        response = json.dumps({'NAI':['please, use application/json']})
+        response = json.dumps({'Error':['please, contact with the website administrator to quickly solve this error']})
 
     return response
 
