@@ -10,7 +10,7 @@ import theme from "assets/theme";
 
 import textSearchRoutes from "features/text-search/text-search.routes";
 import signSearchRoutes from "features/sign-search/sign-search.routes";
-
+import aboutRoutes from "features/about/about.routes";
 
 import { NotificationProvider } from 'contextProviders/NotificationContext'
 
@@ -24,8 +24,10 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const routes = [].concat(textSearchRoutes)
+  const routes = []
+    .concat(textSearchRoutes)
     .concat(signSearchRoutes)
+    .concat(aboutRoutes)
 
 
   const getRoutes = (allRoutes) =>

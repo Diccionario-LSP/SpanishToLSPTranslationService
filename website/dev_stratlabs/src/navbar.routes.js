@@ -17,6 +17,11 @@ const routes = [
     icon: <SignLanguageIcon />,
     route: "/search-by-sign",
   }
+  ,
+  {
+    name: "Equipo",
+    route: "/team",
+  }
 ];
 
 export default routes;
