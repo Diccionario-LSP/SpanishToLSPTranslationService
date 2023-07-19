@@ -5,7 +5,7 @@
         "keypoints_model": "mediapipe",
         "lr": 0.0005,
         "keypoints_number": 108,
-        "num_classes":50,
+        "num_classes":38,
         "nhead": 2,
         "num_encoder_layers":2,
         "num_decoder_layers":2,
