@@ -29,6 +29,7 @@ import { useTextSearchService } from "../text-search.services";
 const TextSearchModal = forwardRef((props, ref) => {
   const textSearchService = useTextSearchService();
 
+  const [title, setTitle] = useState("");
   const [query, setQuery] = useState("");
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState("");
@@ -67,9 +68,11 @@ const TextSearchModal = forwardRef((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    showModal(visible = true, word) {
+    showModal(visible = true, title, query, results) {
       setShow(visible);
-      if (word) setQuery(word);
+      if (title) setTitle(title);
+      if (query) setQuery(query);
+      if (results) setResults(results);
     },
   }));
 
@@ -96,7 +99,7 @@ const TextSearchModal = forwardRef((props, ref) => {
           shadow="xl"
         >
           <MKBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
-            <MKTypography variant="h5">{query}</MKTypography>
+            <MKTypography variant="h5">{title}</MKTypography>
             <CloseIcon fontSize="medium" sx={{ cursor: "pointer" }} onClick={closeModal} />
           </MKBox>
           <Divider sx={{ my: 0 }} />
@@ -129,11 +132,13 @@ const TextSearchModal = forwardRef((props, ref) => {
                 <>
                   {result != results[0] && <Divider />}
                   <Grid container spacing={1} key={result.key}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {result.word}
-                      </Typography>
-                    </Grid>
+                    {false && (
+                      <Grid item xs={12} md={12} lg={12}>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {result.word}
+                        </Typography>
+                      </Grid>
+                    )}
                     <Grid item xs={12} md={6} lg={6}>
                       <SignVideo
                         source={result.wordVideoUrl}

@@ -33,6 +33,7 @@ function CenteredFooter({ company, links, socials, light }) {
       variant="body2"
       color={light ? "white" : "secondary"}
       fontWeight="regular"
+
     >
       {link.name}
     </MKTypography>
@@ -46,6 +47,7 @@ function CenteredFooter({ company, links, socials, light }) {
       variant="body2"
       color={light ? "white" : "secondary"}
       fontWeight="regular"
+      target="_blank"
     >
       {social.icon}
     </MKTypography>

@@ -45,6 +45,7 @@ import SignVideo from "components/UI/SignVideo";
 
 function SignSearch() {
   const signSearchService = useSignSearchService();
+
   const notification = useNotification();
 
   const { hideRecordingInstructionsOnLoad, showRecordingDebugInfo } = usePersistentConfig();
@@ -208,7 +209,12 @@ function SignSearch() {
                                 href={"#" + s.word}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  textSearchModalRef.current.showModal(true, s.word);
+                                  textSearchModalRef.current.showModal(
+                                    true,
+                                    s.word,
+                                    undefined,
+                                    s.results
+                                  );
                                 }}
                               >
                                 {s.word}

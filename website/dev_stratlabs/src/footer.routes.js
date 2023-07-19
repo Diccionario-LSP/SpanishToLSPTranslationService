@@ -18,6 +18,10 @@ export default {
       name: "Búsqueda por Seña",
       route: "/search-by-sign",
     },
+    {
+      name: "Equipo",
+      route: "/team",
+    },
   ],
   socials: [
     { icon: <GitHubIcon fontSize="small" />, link: "https://github.com/gissemari/PeruvianSignLanguage" },
