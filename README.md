@@ -9,8 +9,8 @@
 
 
 
-<!-- [📚Documentation](https://deeplabcut.github.io/DeepLabCut/README.html) |
-[🛠️ Installation](https://deeplabcut.github.io/DeepLabCut/docs/installation.html) | -->
+[📚Documentation](https://diccionario-lsp.github.io/LSP-Peru-Diccionary/README.html) 
+<!-- [🛠️ Installation](https://deeplabcut.github.io/DeepLabCut/docs/installation.html) -->
 [✌️Dictionary LSP](https://www.dvlsp.link) |
 [🗃️PeruSIL Database](https://github.com/gissemari/PeruvianSignLanguage) 
 
