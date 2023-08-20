@@ -1,7 +1,7 @@
 <div align="center">
 
 <p align="center">
-<img src="assets/Banner.png" width="100%">
+<img src="assets/banner2.png" width="100%">
 </p>
 <p align="center">
 <img src="assets/dvlsp-banner_v3.gif" width="75%">
