@@ -1,5 +1,6 @@
 export const API_URLS = {
-    WORDS: `https://cklvhhyl66.execute-api.us-east-1.amazonaws.com/`,
+    // WORDS: `https://cklvhhyl66.execute-api.us-east-1.amazonaws.com/`,
+    WORDS: `https://bgupdn5xid.execute-api.us-east-1.amazonaws.com/`,
     ISOLATED_SIGNS: `https://isolatedsigns.s3.amazonaws.com/`,
     SENTENCE_SIGNS: `https://sentencesigns.s3.amazonaws.com/`
 }

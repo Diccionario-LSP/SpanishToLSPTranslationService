@@ -49,6 +49,7 @@ import julioMendoza from "assets/images/team/julio-mendoza.jpg";
 import sabinaOporto from "assets/images/team/sabina-oporto.jpg";
 
 import stratlabs from "assets/images/team/stratlabs.png";
+import aws from "assets/images/team/aws.png";
 
 function Team() {
   const seccionA = [
@@ -278,6 +279,41 @@ function Team() {
           </Grid>
         </Grid>
       </Container>
+      <Container sx={{ mb: 10 }}>
+    <Grid container>
+      <Grid item xs={12} md={12} sx={{ mb: 6 }}>
+        <MKTypography variant="h3" color="white" textAlign="center">
+          Sponsor
+        </MKTypography>
+      </Grid>
+    </Grid>
+    <Grid container spacing={3} style={{ display: "flex", justifyContent: "center" }}>
+      {/* AWS Logo */}
+      <Grid
+        item
+        xs={12}
+        md={4}
+        lg={3}
+        xl={2}
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        <MKBox mb={0} style={{ display: "flex" }}>
+          <Card sx={{ mt: 0 }} style={{ backgroundColor: "#ffffff15" }}>
+            <Grid container>
+              <Grid item xs={12} md={12} lg={12}>
+                <MKBox width="100%" pt={2} pb={1} px={2}>
+                  <Link href="https://aws.amazon.com" target="_blank">
+                    {/* AWS Logo */}
+                    <MKBox component="img" src={aws} alt={"AWS"} width="100%" />
+                  </Link>
+                </MKBox>
+              </Grid>
+            </Grid>
+          </Card>
+        </MKBox>
+      </Grid>
+    </Grid>
+  </Container>
     </>
   );
 }
