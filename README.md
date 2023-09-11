@@ -41,9 +41,6 @@ The diagram of our architecture is showed bellow:
   <img src="./assets/AWS_Diagram.png" alt="Architecture" width="738">
 </p>
 
-<!-- ~~As is written before, we are currently evaluating if the inference of video streams will use Lambda, EC2 or even SageMaker.~~ -->
-<!--Links-->
-[Demo]: http://lsp-web.s3-website-us-east-1.amazonaws.com/index.html
 
 ## How It Works
 ### **User perspective**
@@ -53,7 +50,7 @@ The diagram of our architecture is showed bellow:
 4. Learn LSP!
 
 ### **Front-end perspective**
-1. Once the Html/CSS/JS files are ready, there is necessary to upload them to S3, then the S3 bucket is configured to public access, Route 53 and Cloud Formation have to be configured with records info of the hosted domain.
+1. Once the Html/CSS/JS files are ready, there is necessary to upload them to S3 bucket, then the S3 bucket is configured to public access, Route 53 and Cloud Formation have to be configured with records info of the hosted domain.
 
 ### **Back-end perspective**
 1. After the training and local test of the ML model there is necessary to create an aws account, configure the AWS credentials, and create a S3 Bucket for the model deployment and video uploads.
