@@ -31,6 +31,7 @@ import MKTypography from "components/MKTypography";
 
 import Webcam from "react-webcam";
 import { useHolistic } from "../hooks/useMediapipe";
+import loadHolisticModel from "../hooks/loadHollistic";
 import { usePersistentConfig } from "hooks/usePersistentConfig";
 import { RECORDING } from "constants";
 import { leftHandTemplate, rightHandTemplate, faceTemplate } from "utils/landmark-helper";
@@ -39,7 +40,7 @@ import InstructionsModal from "./InstructionsModal";
 
 const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const { showRecordingPlayStopButtons, storedDeviceId, setStoredDeviceId } = usePersistentConfig();
-
+  const [holisticModel, setHolisticModel] = useState(null);
   const [selectCameraEl, setSelectCameraEl] = useState(null);
   const [mirrorCamera, setMirrorCamera] = useState(true);
   const [deviceId, setDeviceId] = useState(storedDeviceId);
@@ -49,6 +50,19 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
   const instructionsModalRef = useRef(null);
 
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        const model = await loadHolisticModel();
+        setHolisticModel(model);
+      } catch (error) {
+        // Handle the error, e.g., show an error message
+      }
+    };
+
+    loadModel();
+  }, []);
+  
   const {
     webcamRef,
 
@@ -101,6 +115,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
   const onWebcamUserMedia = async () => {
     clearCanvas();
+    paintTemplateLandmarks_v2();
     await mediaPipeReset();
     await initHolistic(onHolisticResults);
     await initCamera(deviceId);
@@ -166,6 +181,60 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
         lineWidth: 1,
       });
     }
+    canvasCtx.restore();
+  };
+
+  const paintTemplateLandmarks_v2 = () => {
+    if (isRecording.current) return;
+
+    const canvas = document.getElementById("canvas");
+    const canvasCtx = canvas.getContext("2d");
+
+    canvasCtx.save();
+    canvasCtx.globalCompositeOperation = "source-over";
+
+    /*
+      FACEMESH_TESSELATION
+      FACE_GEOMETRY,
+      FACEMESH_FACE_OVAL,
+      FACEMESH_CONTOURS,
+*/
+
+    //FACEMESH
+    
+    drawConnectors(canvasCtx, faceTemplate, FACEMESH_CONTOURS, {
+      color: "#ffffffff",
+      lineWidth: 1,
+    });
+    
+
+    //LEFT HAND
+    
+    drawConnectors(canvasCtx, leftHandTemplate, HAND_CONNECTIONS, {
+      color: "#ffffffff",
+      lineWidth: 2,
+    });
+    drawLandmarks(canvasCtx, leftHandTemplate, {
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      color: "#ffffffff",
+      fillColor: "transparent",
+      lineWidth: 1,
+    });
+    
+
+    //RIGHT HAND
+  
+    drawConnectors(canvasCtx, rightHandTemplate, HAND_CONNECTIONS, {
+      color: "#ffffffff",
+      lineWidth: 2,
+    });
+    drawLandmarks(canvasCtx, rightHandTemplate, {
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      color: "#ffffffff",
+      fillColor: "transparent",
+      lineWidth: 1,
+    });
+    
     canvasCtx.restore();
   };
 
