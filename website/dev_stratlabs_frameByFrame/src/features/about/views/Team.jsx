@@ -88,7 +88,7 @@ function Team() {
     },
     {
       nombre: "Cristian Lazo",
-      rol: "Ingeniero de Aprendizaje de Máquina",
+      rol: "Ingeniero de Aprendizaje de Máquina (ML Research Engineer)",
       link: "https://www.linkedin.com/in/cristian-lazo-quispe/",
       foto: cristianLazo,
     },
