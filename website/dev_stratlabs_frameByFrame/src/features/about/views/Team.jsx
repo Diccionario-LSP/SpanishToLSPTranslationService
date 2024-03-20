@@ -71,7 +71,7 @@ function Team() {
     {
       nombre: "Joe Huamaní",
       rol: "Ingeniero de Aprendizaje de Máquina",
-      link: "",
+      link: "https://joenatan30.github.io/JoeHuamani.github.io/",
       foto: joeHuamani,
     },
     {
