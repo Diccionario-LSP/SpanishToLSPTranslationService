@@ -32,6 +32,7 @@ import MKTypography from "components/MKTypography";
 
 import Webcam from "react-webcam";
 import { useHolistic } from "../hooks/useMediapipe";
+import loadHolisticModel from "../hooks/loadHollistic";
 import { usePersistentConfig } from "hooks/usePersistentConfig";
 import { RECORDING } from "constants";
 import { leftHandTemplate, rightHandTemplate, faceTemplate } from "utils/landmark-helper";
@@ -42,7 +43,7 @@ import sombra from '../../../assets/images/canvas/foto_sombra.png';
 
 const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const { showRecordingPlayStopButtons, storedDeviceId, setStoredDeviceId } = usePersistentConfig();
-
+  const [holisticModel, setHolisticModel] = useState(null);
   const [selectCameraEl, setSelectCameraEl] = useState(null);
   const [mirrorCamera, setMirrorCamera] = useState(true);
   const [onLoadingModel, setOnLoadingModel] = useState(false);
@@ -53,9 +54,25 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const transparentIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   const instructionsModalRef = useRef(null);
 
+<<<<<<< HEAD
   const imagen = new Image();
   imagen.src = sombra;
 
+=======
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        const model = await loadHolisticModel();
+        setHolisticModel(model);
+      } catch (error) {
+        // Handle the error, e.g., show an error message
+      }
+    };
+
+    loadModel();
+  }, []);
+  
+>>>>>>> 7a1ca1167abdb4bffcfafc139849a0715f7d8736
   const {
     webcamRef,
 
@@ -107,9 +124,14 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   }, [handleDevices]);
 
   const onWebcamUserMedia = async () => {
+<<<<<<< HEAD
    
     clearCanvas()
     setOnLoadingModel(true)
+=======
+    clearCanvas();
+    paintTemplateLandmarks_v2();
+>>>>>>> 7a1ca1167abdb4bffcfafc139849a0715f7d8736
     await mediaPipeReset();
     await initHolistic(onHolisticResults);
     await initCamera(deviceId);
@@ -180,6 +202,60 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
       });
     }
     canvasCtx.restore();*/
+  };
+
+  const paintTemplateLandmarks_v2 = () => {
+    if (isRecording.current) return;
+
+    const canvas = document.getElementById("canvas");
+    const canvasCtx = canvas.getContext("2d");
+
+    canvasCtx.save();
+    canvasCtx.globalCompositeOperation = "source-over";
+
+    /*
+      FACEMESH_TESSELATION
+      FACE_GEOMETRY,
+      FACEMESH_FACE_OVAL,
+      FACEMESH_CONTOURS,
+*/
+
+    //FACEMESH
+    
+    drawConnectors(canvasCtx, faceTemplate, FACEMESH_CONTOURS, {
+      color: "#ffffffff",
+      lineWidth: 1,
+    });
+    
+
+    //LEFT HAND
+    
+    drawConnectors(canvasCtx, leftHandTemplate, HAND_CONNECTIONS, {
+      color: "#ffffffff",
+      lineWidth: 2,
+    });
+    drawLandmarks(canvasCtx, leftHandTemplate, {
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      color: "#ffffffff",
+      fillColor: "transparent",
+      lineWidth: 1,
+    });
+    
+
+    //RIGHT HAND
+  
+    drawConnectors(canvasCtx, rightHandTemplate, HAND_CONNECTIONS, {
+      color: "#ffffffff",
+      lineWidth: 2,
+    });
+    drawLandmarks(canvasCtx, rightHandTemplate, {
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      color: "#ffffffff",
+      fillColor: "transparent",
+      lineWidth: 1,
+    });
+    
+    canvasCtx.restore();
   };
 
   const paintLandmarks = (results) => {

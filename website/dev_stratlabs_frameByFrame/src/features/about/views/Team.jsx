@@ -47,6 +47,7 @@ import joeHuamani from "assets/images/team/joe-huamani.jpg";
 import juanVillamonte from "assets/images/team/juan-villamonte.jpg";
 import julioMendoza from "assets/images/team/julio-mendoza.jpg";
 import sabinaOporto from "assets/images/team/sabina-oporto.jpg";
+import cristianLazo from "assets/images/team/cristian-lazo.jpg";
 
 import stratlabs from "assets/images/team/stratlabs.png";
 
@@ -84,6 +85,12 @@ function Team() {
       rol: "Ingeniero de Datos",
       link: "https://www.linkedin.com/in/cvasquezroque/",
       foto: carlosVasquez,
+    },
+    {
+      nombre: "Cristian Lazo",
+      rol: "ML Research Engineer",
+      link: "https://www.linkedin.com/in/cristian-lazo-quispe/",
+      foto: cristianLazo,
     },
     {
       nombre: "Francisco Cerna",
