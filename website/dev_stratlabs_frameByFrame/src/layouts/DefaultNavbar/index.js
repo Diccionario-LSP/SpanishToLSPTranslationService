@@ -70,10 +70,10 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   }, []);
 
   const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => (
-    <DefaultNavbarDropdown
+    <DefaultNavbarDropdown 
+      icon={icon}
       key={name}
       name={name}
-      icon={icon}
       href={href}
       route={route}
       collapse={Boolean(collapse)}
@@ -85,7 +85,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
         }
       }}
       onMouseLeave={() => collapse && setDropdown(null)}
-      light={light}
+      light="light"
     />
   ));
 

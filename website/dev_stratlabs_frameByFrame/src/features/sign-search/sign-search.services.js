@@ -24,8 +24,8 @@ export const useSignSearchService = () => {
         const params = {
             FunctionName: AWS_CONFIG.LAMBDA_SAGEMAKER_INOKER,
             Payload: JSON.stringify({
-                //keypoints: keypoints
-                default: keypoints
+                keypoints: keypoints
+                //default: keypoints
             })
         };
 

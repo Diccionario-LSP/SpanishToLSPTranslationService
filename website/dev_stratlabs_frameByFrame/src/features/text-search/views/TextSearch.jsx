@@ -30,6 +30,7 @@ import MKInput from "components/MKInput";
 import SearchIcon from "@mui/icons-material/Search";
 
 import SignVideo from "components/UI/SignVideo";
+import SignVideoPhrase from "components/UI/SignVideoPhrase";
 import PageHeaderContainer from "components/UI/PageHeaderContainer";
 import PageContentContainer from "components/UI/PageContentContainer";
 
@@ -193,17 +194,17 @@ function TextSearch() {
                   style: { paddingRight: 13, paddingLeft: 17 },
                   sx: { fontSize: "x-large" },
                   startAdornment: (
-                    <InputAdornment>
+                    <InputAdornment position="start">
                       <SearchIcon />
                     </InputAdornment>
                   ),
                   endAdornment: (
-                    <InputAdornment>
+                    <InputAdornment position="end">
                       <MKButton
                         variant="contained"
                         color="light"
                         onClick={() => setSearchQuery(query)}
-                        loading={true}
+                        loading="true"
                       >
                         Buscar
                       </MKButton>
@@ -264,11 +265,43 @@ function TextSearch() {
             {message}
           </Typography>
         )}
-        <Grid container spacing={3} style={{ flexDirection: "column", alignItems: "center" }}>
+        <Grid container spacing={3} style={{ flexDirection: 'row', alignItems: 'center' }}>
           {results &&
             results.map((result) => (
-              <>
-                <Grid item xs={12} md={12} lg={6} key={result.key}>
+              <React.Fragment key={result.key}>
+                <Grid item xs={12} md={12} lg={6}>
+                  <Card sx={{ padding: 2 }}>
+                    <Grid container style={{ flexDirection: 'column', alignItems: 'center' }}>
+                      <Grid item xs={12} md={12} lg={12}>
+                        <Typography gutterBottom variant="h5" component="div" >
+                          {result.word}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={12} lg={12}>
+                        <SignVideo
+                          source={result.wordVideoUrl}
+                          style={{ borderRadius: '8px', width: '100%', marginBottom: '8px' }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={12} lg={12} style={{ borderTop: '2px solid #ccc' }}>
+                        <SignVideoPhrase 
+                          source={result.phraseVideoUrl} 
+                          phrase={result.phrase}
+                          style={{ borderRadius: '8px', width: '100%', marginBottom: '8px' }} />
+                      </Grid>
+                    </Grid>
+                  </Card>
+                </Grid>
+              </React.Fragment>
+            ))}
+        </Grid>
+
+
+        {/*<Grid container spacing={3} style={{ flexDirection: "row", alignItems: "center" }}>
+          {results &&
+            results.map((result) => (
+              <React.Fragment key={result.key}>
+                <Grid item xs={12} md={12} lg={6}>
                   <Card sx={{ padding: 2 }}>
                     <Grid container>
                       <Grid item xs={12} md={12} lg={12}>
@@ -294,9 +327,10 @@ function TextSearch() {
                     </Grid>
                   </Card>
                 </Grid>
-              </>
+              </React.Fragment>
             ))}
-        </Grid>
+        </Grid>*/}
+
 
         {false && (
           <Grid container spacing={3} alignItems="center">

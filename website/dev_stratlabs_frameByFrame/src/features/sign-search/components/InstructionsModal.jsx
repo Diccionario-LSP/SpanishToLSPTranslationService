@@ -81,6 +81,11 @@ const Instructions = forwardRef((props, ref) => {
               maxHeight: "calc(100vh - 150px)",
             }}
           >
+            <SignVideo
+              source={"https://isolatedsigns.s3.amazonaws.com/INSTRUCCIONES-LSP.mp4"}
+              style={{}}
+            ></SignVideo>
+            <Divider sx={{ my: 0 }} />
             <MKBox p={2}>
               <MKTypography variant="body2" color="secondary" fontWeight="regular">
                 Al dar clic en el botón GRABAR SEÑA la cámara de tu computadora se encenderá y se
@@ -95,11 +100,6 @@ const Instructions = forwardRef((props, ref) => {
                 manos y cabeza estén visibles y en posición correcta.
               </MKTypography>
             </MKBox>
-            <Divider sx={{ my: 0 }} />
-            <SignVideo
-              source={"https://isolatedsigns.s3.amazonaws.com/INSTRUCCIONES-LSP.mp4"}
-              style={{}}
-            ></SignVideo>
           </MKBox>
           <MKBox display="flex" justifyContent="space-between" p={1.5}>
             {hideDontShowAgain ? (

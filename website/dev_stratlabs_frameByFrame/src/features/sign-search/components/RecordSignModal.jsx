@@ -24,6 +24,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SlowMotionVideoIcon from "@mui/icons-material/SlowMotionVideo";
 
+
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
@@ -37,17 +38,23 @@ import { leftHandTemplate, rightHandTemplate, faceTemplate } from "utils/landmar
 
 import InstructionsModal from "./InstructionsModal";
 
+import sombra from '../../../assets/images/canvas/foto_sombra.png';
+
 const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   const { showRecordingPlayStopButtons, storedDeviceId, setStoredDeviceId } = usePersistentConfig();
 
   const [selectCameraEl, setSelectCameraEl] = useState(null);
   const [mirrorCamera, setMirrorCamera] = useState(true);
+  const [onLoadingModel, setOnLoadingModel] = useState(false);
   const [deviceId, setDeviceId] = useState(storedDeviceId);
   const [devices, setDevices] = useState([]);
   const [show, setShow] = useState(false);
   const toggleModal = () => setShow(!show);
-
+  const transparentIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   const instructionsModalRef = useRef(null);
+
+  const imagen = new Image();
+  imagen.src = sombra;
 
   const {
     webcamRef,
@@ -100,7 +107,9 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   }, [handleDevices]);
 
   const onWebcamUserMedia = async () => {
-    clearCanvas();
+   
+    clearCanvas()
+    setOnLoadingModel(true)
     await mediaPipeReset();
     await initHolistic(onHolisticResults);
     await initCamera(deviceId);
@@ -116,13 +125,17 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
   };
 
   const paintTemplateLandmarks = (results) => {
-    if (isRecording.current) return;
 
+    if (isRecording.current) return;
+  
     const canvas = document.getElementById("canvas");
     const canvasCtx = canvas.getContext("2d");
+  
+    canvasCtx.globalAlpha = 0.7;
+    // Dibujar la imagen de la sombra
+    canvasCtx.drawImage(imagen, 0, 0, canvas.width, canvas.height);
 
-    canvasCtx.save();
-    canvasCtx.globalCompositeOperation = "source-over";
+    canvasCtx.globalAlpha = 1.0;
 
     /*
       FACEMESH_TESSELATION
@@ -130,7 +143,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
       FACEMESH_FACE_OVAL,
       FACEMESH_CONTOURS,
 */
-
+    /* TO RETRIEVE PREVIOUS CODE
     //FACEMESH
     if (!results.inStartPosition.face) {
       drawConnectors(canvasCtx, faceTemplate, FACEMESH_CONTOURS, {
@@ -166,7 +179,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
         lineWidth: 1,
       });
     }
-    canvasCtx.restore();
+    canvasCtx.restore();*/
   };
 
   const paintLandmarks = (results) => {
@@ -174,9 +187,6 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
     const canvas = document.getElementById("canvas");
     const canvasCtx = canvas.getContext("2d");
-
-    canvasCtx.save();
-    canvasCtx.globalCompositeOperation = "source-over";
 
     //POSE
     /*
@@ -216,7 +226,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
       FACEMESH_FACE_OVAL,
       FACEMESH_CONTOURS,
     */
-
+    
     const faceColor = results.inStartPosition.face ? "#00CC0070" : "#CC000070";
     drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_FACE_OVAL, {
       color: faceColor,
@@ -227,13 +237,14 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
     const leftHandColor = results.inStartPosition.leftHand ? "#00CC0070" : "#CC000070";
     drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, {
       color: leftHandColor,
-      lineWidth: 2,
+      lineWidth: 1.5,
     });
     drawLandmarks(canvasCtx, results.leftHandLandmarks, {
-      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 2, 2),
       fillColor: "transparent",
       lineWidth: 1,
     });
+
 
     //RIGHT HAND
     const rightHandColor = results.inStartPosition.rightHand ? "#00CC0070" : "#CC000070";
@@ -242,18 +253,33 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
       lineWidth: 2,
     });
     drawLandmarks(canvasCtx, results.rightHandLandmarks, {
-      radius: (data) => lerp(data.from.z, -0.15, 0.1, 5, 1),
+      radius: (data) => lerp(data.from.z, -0.15, 0.1, 2, 1),
       fillColor: "transparent",
       lineWidth: 1,
     });
+    
+    const poseColor = results.inStartPosition.pose ? "#00CC0070" : "#CC000070";
+    drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+      color: (data) => {
+        // eslint-disable-next-line no-debugger
 
+        
+        if (transparentIndex.includes(data.index))
+          return "transparent";
+        else
+          return poseColor;
+       
+        
+      },
+      lineWidth: 2,
+    });
+    
     canvasCtx.restore();
   };
 
   // #endregion Paint UI
 
   // #region Recording
-
   const [processingFrames, setProcessingFrames] = useState(false);
 
   const startRecording = () => {
@@ -321,10 +347,10 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
 
   const onHolisticResults = (results) => {
     clearCanvas();
-
+    setOnLoadingModel(false)
     paintTemplateLandmarks(results);
     paintLandmarks(results);
-
+    
     if (results.inStartPosition.all && !isRecording.current && !inCountdown.current) {
       startCountdown();
     }
@@ -471,7 +497,40 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                     transform: mirrorCamera ? "scaleX(-1)" : "none",
                   }}
                 ></canvas>
-
+                {onLoadingModel && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      width: "100%",
+                      top: 0,
+                      height: "100%",
+                      display: "flex",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        width: "100%",
+                        top: 0,
+                        height: "100%",
+                        backgroundColor: "black",
+                        opacity: 0.7,
+                        borderRadius: 8,
+                      }}
+                    ></div>
+                    <div style={{ zIndex: 100, textAlign: "center" }}>
+                      <div style={{ color: "#ffffffaa" }}>Cargando modelo...</div>
+                      <MKTypography variant="h1" color="white" style={{ fontSize: 70 }}>
+                        {progressHolisticFrame.current}
+                      </MKTypography>
+                    </div>
+                  </div>
+                )}
                 {processingFrames && (
                   <div
                     style={{
@@ -533,7 +592,7 @@ const RecordSignModal = forwardRef(({ onRecorded }, ref) => {
                       }}
                     ></div>
                     <div style={{ zIndex: 100, textAlign: "center" }}>
-                      <div style={{ color: "#ffffffaa" }}>Grabando en</div>
+                      <div style={{ color: "#ffffffaa" }}>Prepárate en</div>
                       <MKTypography variant="h1" color="white" style={{ fontSize: 70 }}>
                         {countdownLabel}
                       </MKTypography>

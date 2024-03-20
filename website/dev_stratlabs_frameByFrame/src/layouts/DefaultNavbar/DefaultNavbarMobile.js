@@ -24,10 +24,10 @@ function DefaultNavbarMobile({ routes, open }) {
 
   const renderNavbarItems = routes.map(
     ({ name, icon, collapse: routeCollapses, href, route, collapse: navCollapse, children }) => (
-      <DefaultNavbarDropdown
+      <DefaultNavbarDropdown 
+        icon={icon}
         key={name}
         name={name}
-        icon={icon}
         collapseStatus={name === collapse}
         onClick={() => routeCollapses && handleSetCollapse(name)}
         href={href}

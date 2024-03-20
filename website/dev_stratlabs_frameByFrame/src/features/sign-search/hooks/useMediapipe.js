@@ -47,6 +47,8 @@ export const useHolistic = () => {
                 16: { x: x16, y: y16 },
                 18: { x: x18, y: y18 },
                 20: { x: x20, y: y20 },
+                9: {x: x9, y: y9},
+                10: {x: x10, y: y10},
                 2: { x: x2, y: y2 },
                 5: { x: x5, y: y5 },
             },
@@ -57,6 +59,10 @@ export const useHolistic = () => {
 
         const right_hand_x = (x16 + x18 + x20) / 3;
         const right_hand_y = (y16 + y18 + y20) / 3;
+ 
+        const neck_left_x = (x10 + x9) / 2
+        const neck_left_y = (y10 + y9) / 2
+        const shoulder_dist_x = Math.abs(x10 - x9)
 
         const eye_x = (x2 + x5) / 2;
         const eye_y = (y2 + y5) / 2;
@@ -98,8 +104,9 @@ export const useHolistic = () => {
         }*/
 
         const inStartPosition = {
-            leftHand: false,
-            rightHand: false,
+            //leftHand: false,
+            //rightHand: false,
+            pose: false,
             face: false,
             all: false
         }
@@ -108,19 +115,23 @@ export const useHolistic = () => {
             //console.log('faceTemplate = ' + JSON.stringify(results.faceLandmarks))
             inStartPosition.face = true;
         }
-
-        if (Math.abs(left_hand_x - 0.635) < 0.075 && Math.abs(left_hand_y - 0.688) < 0.134) {
+        
+        if ((Math.abs(neck_left_x - 0.52) < 0.040 && Math.abs(neck_left_y - 0.3150) < 0.080) &&
+             Math.abs(shoulder_dist_x- 0.051 ) < 0.020) {
+            inStartPosition.pose = true;
+        }
+        console.log("left",left_hand_x, left_hand_y)
+        if (Math.abs(left_hand_x - 0.770) < 0.075 && Math.abs(left_hand_y - 0.580) < 0.134) {
             //console.log('leftHandTemplate = ' + JSON.stringify(results.leftHandLandmarks))
             inStartPosition.leftHand = true;
         }
-
-        if (Math.abs(right_hand_x - 0.365) < 0.075 && Math.abs(right_hand_y - 0.688) < 0.134) {
+        console.log("right",right_hand_x, right_hand_y)
+        if (Math.abs(right_hand_x - 0.235) < 0.075 && Math.abs(right_hand_y - 0.580) < 0.134) {
             //console.log('rightHandTemplate = ' + JSON.stringify(results.rightHandLandmarks))
             inStartPosition.rightHand = true;
         }
-
-        inStartPosition.all = inStartPosition.leftHand && inStartPosition.rightHand && inStartPosition.face;
-
+        
+        inStartPosition.all = inStartPosition.face && inStartPosition.pose && inStartPosition.rightHand && inStartPosition.leftHand;
         results.inStartPosition = inStartPosition;
 
         if (onFrameResult.current)
